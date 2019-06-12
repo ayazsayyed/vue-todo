@@ -2,7 +2,7 @@
 
 > Simple To-Do List Application
 
-![alt text](https://raw.githubusercontent.com/username/projectname/branch/path/to/img.png)
+![alt text](https://raw.githubusercontent.com/ayazsayyed/vue-todo/master/src/assets/UI.png)
 ## Build Setup
 
 ``` bash
