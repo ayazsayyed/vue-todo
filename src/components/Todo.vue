@@ -6,8 +6,10 @@
     <div class="row" >
       <div class="col-md-6"><h1>{{title}}</h1></div>
       <div class="col-md-6 text-right">
-        <button class=" get-btn" @click="getTodos()"> Fetch Todos </button>
+        <!-- <button class=" get-btn" @click="getTodos()"> Fetch Todos </button> -->
       </div>
+    </div>
+    <div class="row">
       <div class="col-md-4">
         <h6 class="count total">Total : {{todos.length}}</h6>
       </div>
@@ -363,5 +365,24 @@ form input,
 }
 .main-wrapper{
   height: 100%;
+}
+@media screen and (min-width: 370px) {
+  section.main-section {
+        padding: 0;
+  }
+  #todolist{
+      margin: 2rem auto;
+          padding: 1.5rem;
+          margin: 1rem
+  }
+  #todolist h1{
+      font-size: 1.5rem;
+  }
+  .count.completed{
+  text-align: left
+}
+.count.pending{
+  text-align: left;
+}
 }
 </style>
