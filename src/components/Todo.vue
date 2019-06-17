@@ -2,6 +2,7 @@
   <div class="main-wrapper">
     <section class="section pb-0 main-section bg-gradient-warning">
       <main class="container card shadow shadow-lg--hover mt-5" id="todolist">
+        <div id="firebaseui-auth-container"></div>
         <div class="row">
           <div class="col-md-6">
             <h1>{{title}}</h1>
@@ -29,6 +30,7 @@
                 placeholder="Enter New To-Do"
                 v-on:keydown.enter="addnewTodo($event)"
                 autocomplete="off"
+                v-model="newTodoText"
               >
               <i class="fa fa-arrow-right submit-icon" @click="addnewTodo($event)" aria-hidden="true"></i>
             </div>
@@ -103,7 +105,8 @@ export default {
       completedTodos: 0,
       pendingTodos: 0,
       item: 0,
-      checkkAll: false
+      checkkAll: false,
+      newTodoText:''
     };
   },
 
@@ -137,17 +140,17 @@ export default {
       this.updateTodos();
     },
     addnewTodo(e) {
-      if (e.target.value.length > 0) {
+      if (this.newTodoText.length > 0) {
         e.preventDefault();
         let newTodo = {
           completed: false,
           id: 201,
-          title: e.target.value,
+          title: this.newTodoText,
           userId: 1
         };
         this.todos.unshift(newTodo);
         newTodo.id++;
-        e.target.value = "";
+        this.newTodoText = "";
         this.updateTodos();
       }
     }
@@ -276,6 +279,7 @@ form label {
   background: transparent;
   border-bottom: 1px solid #fb6340;
   color: #fb6340;
+  padding-right: 50px;
 }
 .add-todo-field:focus {
   box-shadow: none;
@@ -415,5 +419,6 @@ form input,
   right: 30px;
   top: 12px;
   font-size: 25px;
+  cursor: pointer;
 }
 </style>
