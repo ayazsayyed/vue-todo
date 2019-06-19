@@ -1,6 +1,60 @@
 <template>
   <div class="main-wrapper">
-    <section class="section pb-0 main-section bg-gradient-warning">
+    <section class="section pb-0 main-section bg-gradient-info">
+      <nav class="navbar navbar-expand-lg navbar-dark bg-gradient-info">
+        <div class="container">
+          <a class="navbar-brand" href="#">TRAKK 'EM All !!</a>
+          <button
+            class="navbar-toggler"
+            type="button"
+            data-toggle="collapse"
+            data-target="#navbar-default"
+            aria-controls="navbar-default"
+            aria-expanded="false"
+            aria-label="Toggle navigation"
+          >
+            <span class="navbar-toggler-icon"></span>
+          </button>
+          <div class="collapse navbar-collapse" id="navbar-default">
+            <div class="navbar-collapse-header">
+              <div class="row">
+                <div class="col-6 collapse-brand">
+                  <a href="index.html">
+                    <img src="assets/img/brand/blue.png">
+                  </a>
+                </div>
+                <div class="col-6 collapse-close">
+                  <button
+                    type="button"
+                    class="navbar-toggler"
+                    data-toggle="collapse"
+                    data-target="#navbar-default"
+                    aria-controls="navbar-default"
+                    aria-expanded="false"
+                    aria-label="Toggle navigation"
+                  >
+                    <span></span>
+                    <span></span>
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            <ul class="navbar-nav ml-lg-auto">
+              <li class="nav-item" v-if="!userLoggedIn">
+                <a class="nav-link nav-link-icon" href="#">
+                  <button type="button" class="btn btn-secondary" @click="googleLogin">Login</button>
+                </a>
+              </li>
+              <li class="nav-item" v-if="userLoggedIn">
+                <a class="nav-link nav-link-icon" href="#">
+                  <button type="button" class="btn btn-secondary" @click="googleLogout">Logout</button>
+                </a>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </nav>
       <main class="container card shadow shadow-lg--hover mt-5" id="todolist">
         <div id="firebaseui-auth-container"></div>
         <div class="row">
@@ -13,15 +67,18 @@
         </div>
         <div class="row">
           <div class="col-md-4">
-            <h6 class="count total">Total : {{todos.length}}</h6>
+            <span class="badge badge-primary">Total : {{todos.length || 0}}</span>
+            <!-- <h6 class="count total">Total : {{todos.length}}</h6> -->
           </div>
           <div class="col-md-4">
-            <h6 class="count completed">Completed : {{completedTodos.length}}</h6>
+            <span class="badge badge-success">Success : {{completedTodos.length || 0}}</span>
+            <!-- <h6 class="count completed">Completed : </h6> -->
           </div>
           <div class="col-md-4">
-            <h6 class="count pending">Pending : {{pendingTodos.length}}</h6>
+            <span class="badge badge-warning">Pending : {{pendingTodos.length || 0}}</span>
+            <!-- <h6 class="count pending">Pending : {{pendingTodos.length}}</h6> -->
           </div>
-          <div class="col-md-12">
+          <div class="col-md-12 mt-3">
             <div class="form-group">
               <input
                 type="text"
@@ -32,7 +89,11 @@
                 autocomplete="off"
                 v-model="newTodoText"
               >
-              <i class="fa fa-arrow-right submit-icon" @click="addnewTodo($event)" aria-hidden="true"></i>
+              <i
+                class="fa fa-arrow-right submit-icon"
+                @click="addnewTodo($event)"
+                aria-hidden="true"
+              ></i>
             </div>
           </div>
         </div>
@@ -40,7 +101,8 @@
         <ul id="todo-list">
           <VuePerfectScrollbar class="scroll-area">
             <li :class="todo.completed ? 'done': 'undone'" v-for="(todo,key) in todos" :key="key">
-              <span class="label">{{todo.title}}</span>
+              <span class="label todo-title">{{todo.title}}</span>
+              <span class="date">{{todo.inDate}}</span>
               <div class="actions">
                 <button
                   type="button"
@@ -85,12 +147,16 @@
         </div>
       </main>
     </section>
+    <notifications group="foo" position="top right" class="my-style" width="400"/>
   </div>
 </template>
 
 
 <script>
 import VuePerfectScrollbar from "vue-perfect-scrollbar";
+import moment from "moment";
+import firebase from "firebase";
+// import Notifications from "vue-notification";
 
 export default {
   components: {
@@ -106,10 +172,27 @@ export default {
       pendingTodos: 0,
       item: 0,
       checkkAll: false,
-      newTodoText:''
+      newTodoText: "",
+      userLoggedIn: false,
+      userData: {}
     };
   },
-
+  created() {
+    firebase.auth().onAuthStateChanged(function(user) {
+      if (user) {
+        this.userLoggedIn = true;
+        console.log("logged in");
+      } else {
+        this.userLoggedIn = false;
+      }
+    });
+  },
+  mounted() {
+    if (localStorage.getItem("user")) {
+      const tempData = JSON.parse(localStorage.getItem("user"));
+      console.log(tempData);
+    }
+  },
   methods: {
     clearTodos() {
       this.todos = [];
@@ -146,21 +229,95 @@ export default {
           completed: false,
           id: 201,
           title: this.newTodoText,
-          userId: 1
+          userId: 1,
+          inDate: moment().format("MMM D")
         };
+        this.userData.todos = newTodo;
+
+        localStorage.setItem("user", JSON.stringify(this.userData));
+        console.log(this.userData);
         this.todos.unshift(newTodo);
         newTodo.id++;
         this.newTodoText = "";
         this.updateTodos();
       }
+    },
+    checkLogin() {},
+    googleLogout() {
+      let that = this;
+      var provider = new firebase.auth.GoogleAuthProvider();
+      firebase
+        .auth()
+        .signOut()
+        .then(
+          function() {
+            that.userLoggedIn = false;
+            that.$notify({
+              group: "foo",
+              text: `<div class="alert alert-success" role="alert">
+    You are logged out
+</div> `,
+
+              position: "top left",
+              duration: 50000
+            });
+          },
+          function(error) {
+            console.error("Sign Out Error", error);
+          }
+        );
+    },
+    googleLogin() {
+      let that = this;
+      var provider = new firebase.auth.GoogleAuthProvider();
+      firebase
+        .auth()
+        .signInWithPopup(provider)
+        .then(function(result) {
+          // This gives you a Google Access Token. You can use it to access the Google API.
+          var token = result.credential.accessToken;
+          // The signed-in user info.
+          var user = result.user;
+          console.log(user);
+          that.userData.uid = user.uid;
+          that.userLoggedIn = true;
+          that.$notify({
+            group: "foo",
+            text: `<div class="alert alert-success" role="alert">
+            <p> Welcome ${user.displayName}</p> 
+    You are logged in as ${user.email}
+</div> `,
+
+            position: "top left",
+            duration: 50000
+          });
+          // ...
+        })
+        .catch(function(error) {
+          that.userLoggedIn = false;
+          // Handle Errors here.
+          var errorCode = error.code;
+          var errorMessage = error.message;
+          // The email of the user's account used.
+          var email = error.email;
+          // The firebase.auth.AuthCredential type that was used.
+          var credential = error.credential;
+          that.$notify({
+            group: "foo",
+            text: `<div class="alert alert-danger" role="alert">
+             ${user.errorMessage}
+</div> `,
+
+            position: "top left",
+            duration: 50000
+          });
+        });
     }
   }
 };
 </script>
 <style scoped>
 section.main-section {
-  display: flex;
-  justify-content: center;
   height: 100%;
 }
 .card-body {
@@ -186,7 +343,7 @@ section.main-section {
   padding: 2rem 3rem 3rem;
   max-width: 750px;
   background: #fff;
-  color: #fb6340;
+  color: #32325d;
   box-shadow: 0 0 19px 10px rgba(100, 100, 100, 0.2);
 }
 #todolist .row {
@@ -215,7 +372,7 @@ section.main-section {
   opacity: 0.8;
 }
 #todolist ul {
-  margin-top: 2.6rem;
+  margin-top: 1rem;
   list-style: none;
   padding: 0;
 }
@@ -259,7 +416,7 @@ section.main-section {
   background: none;
   -webkit-appearance: none;
   cursor: pointer;
-  color: #fb6340;
+  color: #11cdef;
 }
 
 /* FORM */
@@ -277,15 +434,15 @@ form label {
   border-radius: 0;
   border: none;
   background: transparent;
-  border-bottom: 1px solid #fb6340;
-  color: #fb6340;
+  border-bottom: 1px solid #11cdef;
+  color: #32325d;
   padding-right: 50px;
 }
 .add-todo-field:focus {
   box-shadow: none;
   background: transparent;
   border: none;
-  border-bottom: 1px solid #fb6340;
+  border-bottom: 1px solid #11cdef;
 }
 form input {
   flex-grow: 1;
@@ -297,7 +454,7 @@ form input {
 .get-btn {
   padding: 0 1.3rem;
   border: none;
-  background: #fb6340;
+  background: #11cdef;
   color: #fff;
   text-transform: uppercase;
   font-weight: bold;
@@ -307,7 +464,7 @@ form input {
   transition: background 0.2s ease-out;
 }
 .get-btn:hover {
-  background: #ff5e5e;
+  background: #11cdef;
 }
 form input,
 .get-btn {
@@ -351,9 +508,9 @@ form input,
   display: block;
   width: 18px;
   height: 18px;
-  /*border:1px solid #FF6666;*/
+  /*border:1px solid #11cdef;*/
   border-radius: 50%;
-  background: #ff6666;
+  background: #11cdef;
   opacity: 0.7;
   transition: all 0.2s ease-in-out;
 }
@@ -400,9 +557,8 @@ form input,
     padding: 0;
   }
   #todolist {
-    margin: 2rem auto;
     padding: 1.5rem;
-    margin: 1rem;
+    margin: 1rem auto;
   }
   #todolist h1 {
     font-size: 1.5rem;
@@ -420,5 +576,21 @@ form input,
   top: 12px;
   font-size: 25px;
   cursor: pointer;
+}
+.badge {
+  font-size: 80%;
+}
+.navbar-dark .navbar-brand {
+  font-size: 20px;
+}
+.todo-title {
+  flex: 1 70%;
+}
+.date {
+  font-size: 12px;
+  color: #8898aa;
+}
+.my-style .vue-notification .notification-title {
+  color: red !important;
 }
 </style>

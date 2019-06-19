@@ -10,7 +10,10 @@
     "build": "cross-env NODE_ENV=production webpack --progress --hide-modules"
   },
   "dependencies": {
+    "firebase": "^6.2.0",
+    "moment": "^2.24.0",
     "vue": "^2.5.11",
+    "vue-notification": "^1.3.16",
     "vue-perfect-scrollbar": "^0.1.0"
   },
   "browserslist": [
