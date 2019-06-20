@@ -19,7 +19,7 @@
             <div class="row">
               <div class="col-6 collapse-brand">
                 <a href="index.html">
-                  <img src="assets/img/brand/blue.png">
+                  <!-- <img src="assets/img/brand/blue.png"> -->
                 </a>
               </div>
               <div class="col-6 collapse-close">
