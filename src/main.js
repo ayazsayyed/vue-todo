@@ -1,7 +1,14 @@
 import Vue from 'vue'
 import App from './App.vue'
+import VueRouter from 'vue-router'
 import firebase from 'firebase'
 import Notifications from 'vue-notification'
+
+import login from './components/Login.vue'
+import PageNotFound from './components/Page404.vue'
+import todo from './components/Todo.vue'
+import register from './components/Register.vue'
+
 const firebaseConfig = {
   apiKey: "AIzaSyAjBiYXlMX5w-AoXmc2FTi7sfgHr8He7S8",
   authDomain: "vue-todo-1.firebaseapp.com",
@@ -13,9 +20,24 @@ const firebaseConfig = {
 };
 
 firebase.initializeApp(firebaseConfig)
+Vue.config.productionTip = false
 Vue.use(Notifications)
+Vue.use(VueRouter);
 
+const routes = [
+  { path:  '/', component: login },
+  { path:  '/login', component: login },
+  { path: '/todo', component: todo },
+  { path: "*", component: PageNotFound},
+  { path: '/register', component: register },
+];
+
+const router = new VueRouter({
+  routes,
+  mode:'history'
+})
 new Vue({
+  router,
   el: '#app',
   render: h => h(App)
 })

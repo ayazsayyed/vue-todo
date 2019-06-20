@@ -1,15 +1,16 @@
 <template>
   <div id="app">
-    <Todo/>
+    <router-view/>
   </div>
 </template>
 
 <script>
 import Todo from './components/Todo' 
+import Login from './components/Login' 
 export default {
   name: 'app',
   components:{
-    Todo
+    Login
   },
   data () {
     return {

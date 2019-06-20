@@ -1,67 +1,24 @@
 <template>
   <div class="main-wrapper">
     <section class="section pb-0 main-section bg-gradient-info">
-      <nav class="navbar navbar-expand-lg navbar-dark bg-gradient-info">
-        <div class="container">
-          <a class="navbar-brand" href="#">TRAKK 'EM All !!</a>
-          <button
-            class="navbar-toggler"
-            type="button"
-            data-toggle="collapse"
-            data-target="#navbar-default"
-            aria-controls="navbar-default"
-            aria-expanded="false"
-            aria-label="Toggle navigation"
-          >
-            <span class="navbar-toggler-icon"></span>
-          </button>
-          <div class="collapse navbar-collapse" id="navbar-default">
-            <div class="navbar-collapse-header">
-              <div class="row">
-                <div class="col-6 collapse-brand">
-                  <a href="index.html">
-                    <img src="assets/img/brand/blue.png">
-                  </a>
-                </div>
-                <div class="col-6 collapse-close">
-                  <button
-                    type="button"
-                    class="navbar-toggler"
-                    data-toggle="collapse"
-                    data-target="#navbar-default"
-                    aria-controls="navbar-default"
-                    aria-expanded="false"
-                    aria-label="Toggle navigation"
-                  >
-                    <span></span>
-                    <span></span>
-                  </button>
-                </div>
-              </div>
-            </div>
-
-            <ul class="navbar-nav ml-lg-auto">
-              <li class="nav-item" v-if="!userLoggedIn">
-                <a class="nav-link nav-link-icon" href="#">
-                  <button type="button" class="btn btn-secondary" @click="googleLogin">Login</button>
-                </a>
-              </li>
-              <li class="nav-item" v-if="userLoggedIn">
-                <a class="nav-link nav-link-icon" href="#">
-                  <button type="button" class="btn btn-secondary" @click="googleLogout">Logout</button>
-                </a>
-              </li>
-            </ul>
-          </div>
-        </div>
-      </nav>
+      <navbar/>
       <main class="container card shadow shadow-lg--hover mt-5" id="todolist">
-        <div id="firebaseui-auth-container"></div>
         <div class="row">
           <div class="col-md-6">
             <h1>{{title}}</h1>
           </div>
           <div class="col-md-6 text-right">
+            <div class="user-icon">
+              <div class="dropdown">
+                <img src="dist/assets/img/user-avatar.png" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" class="dropdown-toggle img-fluid">
+                <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                  <a class="dropdown-item" href="#">Action</a>
+                  <a class="dropdown-item" href="#">Another action</a>
+                  <a class="dropdown-item" href="#">Something else here</a>
+                </div>
+              </div>
+              
+            </div>
             <!-- <button class=" get-btn" @click="getTodos()"> Fetch Todos </button> -->
           </div>
         </div>
@@ -87,7 +44,7 @@
                 placeholder="Enter New To-Do"
                 v-on:keydown.enter="addnewTodo($event)"
                 autocomplete="off"
-                v-model="newTodoText"
+                v-model.trim="newTodoText"
               >
               <i
                 class="fa fa-arrow-right submit-icon"
@@ -100,33 +57,46 @@
 
         <ul id="todo-list">
           <VuePerfectScrollbar class="scroll-area">
-            <li :class="todo.completed ? 'done': 'undone'" v-for="(todo,key) in todos" :key="key">
-              <span class="label todo-title">{{todo.title}}</span>
-              <span class="date">{{todo.inDate}}</span>
-              <div class="actions">
-                <button
-                  type="button"
-                  class="btn-picto"
-                  @click="completeTodo(key)"
-                  :aria-label="todo.completed ? 'Undone' : 'Done'"
-                  :title="todo.completed ? 'Undone' : 'Done'"
+            <draggable handle=".handle-wrapper" ghost-class="ghost" :list="todos">
+              <transition-group>
+                <li
+                  class="todo-item"
+                  :class="todo.completed ? 'done': 'undone'"
+                  v-for="(todo,key) in todos"
+                  :key="key"
                 >
-                  <i
-                    aria-hidden="true"
-                    class="material-icons"
-                  >{{ todo.completed ? 'check_box' : 'check_box_outline_blank' }}</i>
-                </button>
-                <button
-                  @click="deleteTodo(key)"
-                  type="button"
-                  aria-label="Delete"
-                  title="Delete"
-                  class="btn-picto"
-                >
-                  <i aria-hidden="true" class="material-icons">delete</i>
-                </button>
-              </div>
-            </li>
+                  <div class="handle-wrapper">
+                    <i class="fa fa-ellipsis-v" aria-hidden="true"></i>
+                    <i class="fa fa-ellipsis-v" aria-hidden="true"></i>
+                  </div>
+                  <span class="label todo-title" @click="showDetail(todo)">{{todo.title}}</span>
+                  <span class="date">{{todo.inDate}}</span>
+                  <div class="actions">
+                    <button
+                      type="button"
+                      class="btn-picto"
+                      @click="completeTodo(key)"
+                      :aria-label="todo.completed ? 'Undone' : 'Done'"
+                      :title="todo.completed ? 'Undone' : 'Done'"
+                    >
+                      <i
+                        aria-hidden="true"
+                        class="material-icons"
+                      >{{ todo.completed ? 'check_box' : 'check_box_outline_blank' }}</i>
+                    </button>
+                    <button
+                      @click="deleteTodo(key)"
+                      type="button"
+                      aria-label="Delete"
+                      title="Delete"
+                      class="btn-picto"
+                    >
+                      <i aria-hidden="true" class="material-icons">delete</i>
+                    </button>
+                  </div>
+                </li>
+              </transition-group>
+            </draggable>
           </VuePerfectScrollbar>
         </ul>
         <div class="todo-footer" v-if="todos.length >0">
@@ -148,19 +118,27 @@
       </main>
     </section>
     <notifications group="foo" position="top right" class="my-style" width="400"/>
+    <todoDetailModal/>
   </div>
 </template>
 
 
 <script>
 import VuePerfectScrollbar from "vue-perfect-scrollbar";
+import draggable from "vuedraggable";
 import moment from "moment";
 import firebase from "firebase";
-// import Notifications from "vue-notification";
+import navbar from "./Navbar";
+import todoDetailModal from "./TodoDetailModal";
+import { Bus } from "./utils/bus";
 
 export default {
   components: {
-    VuePerfectScrollbar
+    VuePerfectScrollbar,
+    navbar,
+    draggable,
+    todoDetailModal,
+    Bus
   },
   name: "Todo",
   data: function() {
@@ -173,27 +151,17 @@ export default {
       item: 0,
       checkkAll: false,
       newTodoText: "",
-      userLoggedIn: false,
-      userData: {}
+
+      userData: {
+        todos: []
+      }
     };
   },
-  created() {
-    firebase.auth().onAuthStateChanged(function(user) {
-      if (user) {
-        this.userLoggedIn = true;
-        console.log("logged in");
-      } else {
-        this.userLoggedIn = false;
-      }
-    });
-  },
-  mounted() {
-    if (localStorage.getItem("user")) {
-      const tempData = JSON.parse(localStorage.getItem("user"));
-      console.log(tempData);
-    }
-  },
+
   methods: {
+    showDetail(todoItem) {
+      Bus.$emit("showDetailedTaskModal", todoItem);
+    },
     clearTodos() {
       this.todos = [];
       this.updateTodos();
@@ -232,7 +200,7 @@ export default {
           userId: 1,
           inDate: moment().format("MMM D")
         };
-        this.userData.todos = newTodo;
+        this.userData.todos.push(newTodo);
 
         localStorage.setItem("user", JSON.stringify(this.userData));
         console.log(this.userData);
@@ -242,77 +210,7 @@ export default {
         this.updateTodos();
       }
     },
-    checkLogin() {},
-    googleLogout() {
-      let that = this;
-      var provider = new firebase.auth.GoogleAuthProvider();
-      firebase
-        .auth()
-        .signOut()
-        .then(
-          function() {
-            that.userLoggedIn = false;
-            that.$notify({
-              group: "foo",
-              text: `<div class="alert alert-success" role="alert">
-    You are logged out
-</div> `,
-
-              position: "top left",
-              duration: 50000
-            });
-          },
-          function(error) {
-            console.error("Sign Out Error", error);
-          }
-        );
-    },
-    googleLogin() {
-      let that = this;
-      var provider = new firebase.auth.GoogleAuthProvider();
-      firebase
-        .auth()
-        .signInWithPopup(provider)
-        .then(function(result) {
-          // This gives you a Google Access Token. You can use it to access the Google API.
-          var token = result.credential.accessToken;
-          // The signed-in user info.
-          var user = result.user;
-          console.log(user);
-          that.userData.uid = user.uid;
-          that.userLoggedIn = true;
-          that.$notify({
-            group: "foo",
-            text: `<div class="alert alert-success" role="alert">
-            <p> Welcome ${user.displayName}</p> 
-    You are logged in as ${user.email}
-</div> `,
-
-            position: "top left",
-            duration: 50000
-          });
-          // ...
-        })
-        .catch(function(error) {
-          that.userLoggedIn = false;
-          // Handle Errors here.
-          var errorCode = error.code;
-          var errorMessage = error.message;
-          // The email of the user's account used.
-          var email = error.email;
-          // The firebase.auth.AuthCredential type that was used.
-          var credential = error.credential;
-          that.$notify({
-            group: "foo",
-            text: `<div class="alert alert-danger" role="alert">
-             ${user.errorMessage}
-</div> `,
-
-            position: "top left",
-            duration: 50000
-          });
-        });
-    }
+    checkLogin() {}
   }
 };
 </script>
@@ -345,6 +243,7 @@ section.main-section {
   background: #fff;
   color: #32325d;
   box-shadow: 0 0 19px 10px rgba(100, 100, 100, 0.2);
+  overflow: visible;
 }
 #todolist .row {
   text-align: left;
@@ -382,11 +281,12 @@ section.main-section {
 #todolist li {
   display: flex;
   margin-top: 5px;
-  padding: 0.7rem 1rem;
+  padding: 0.5rem 1rem;
   justify-content: space-between;
   align-items: center;
-  background: rgba(255, 255, 255, 0.1);
+  background-color: rgba(255, 255, 255, 0.1);
   text-align: left;
+  padding-left: 5px;
 }
 
 #todolist .actions {
@@ -592,5 +492,22 @@ form input,
 }
 .my-style .vue-notification .notification-title {
   color: red !important;
+}
+
+#todolist li.todo-item:hover {
+  background-color: #f4f5f7;
+  cursor: pointer;
+}
+.todo-item .handle-wrapper {
+  width: 20px;
+  color: #b5b5b5;
+}
+.ghost {
+  border-bottom: 1px solid #11cdef;
+}
+.user-icon img {
+  width: 40px;
+  cursor: pointer;
+  border-radius: 50%;
 }
 </style>
