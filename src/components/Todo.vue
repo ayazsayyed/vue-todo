@@ -3,11 +3,11 @@
     <section class="section pb-0 main-section bg-gradient-info">
       <navbar/>
       <main class="container card shadow shadow-lg--hover mt-5" id="todolist">
-        <div class="row">
-          <div class="col-md-6">
+        <div class="row mb-3">
+          <div class="col-6">
             <h1>{{title}}</h1>
           </div>
-          <div class="col-md-6 text-right">
+          <div class="col-6 text-right">
             <div class="user-icon">
               <div class="dropdown">
                 <img src="dist/assets/img/user-avatar.png" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" class="dropdown-toggle img-fluid">
@@ -23,15 +23,15 @@
           </div>
         </div>
         <div class="row">
-          <div class="col-md-4">
+          <div class="col-4">
             <span class="badge badge-primary">Total : {{todos.length || 0}}</span>
             <!-- <h6 class="count total">Total : {{todos.length}}</h6> -->
           </div>
-          <div class="col-md-4">
+          <div class="col-4">
             <span class="badge badge-success">Success : {{completedTodos.length || 0}}</span>
             <!-- <h6 class="count completed">Completed : </h6> -->
           </div>
-          <div class="col-md-4">
+          <div class="col-4">
             <span class="badge badge-warning">Pending : {{pendingTodos.length || 0}}</span>
             <!-- <h6 class="count pending">Pending : {{pendingTodos.length}}</h6> -->
           </div>
