@@ -194,7 +194,14 @@
                       <ul class="tags-wrapper">
                         <li class="tag-item">
                           <div class="color-option-icon">
-                            <i class="fa fa-ellipsis-v" aria-hidden="true"></i>
+                            <i class="fa fa-ellipsis-v" id="tagColorDropdoen1" aria-hidden="true"
+                            data-toggle="dropdown"
+                                aria-haspopup="true"
+                                aria-expanded="false" 
+                            ></i>
+                            <div class="dropdown-menu" aria-labelledby="tagColorDropdoen1">
+                              <div class="group-color-dialog"><a class="group-color-item" style="background: rgb(0, 200, 117);"></a><a class="group-color-item" style="background: rgb(156, 211, 38);"></a><a class="group-color-item" style="background: rgb(202, 182, 65);"></a><a class="group-color-item" style="background: rgb(255, 203, 0);"></a><a class="group-color-item" style="background: rgb(120, 75, 209);"></a><a class="group-color-item" style="background: rgb(162, 93, 220);"></a><a class="group-color-item" style="background: rgb(0, 134, 192);"></a><a class="group-color-item" style="background: rgb(87, 155, 252);"></a><a class="group-color-item" style="background: rgb(102, 204, 255);"></a><a class="group-color-item" style="background: rgb(187, 51, 84);"></a><a class="group-color-item" style="background: rgb(226, 68, 92);"></a><a class="group-color-item" style="background: rgb(255, 21, 138);"></a><a class="group-color-item" style="background: rgb(255, 90, 196);"></a><a class="group-color-item" style="background: rgb(255, 100, 46);"></a><a class="group-color-item" style="background: rgb(253, 171, 61);"></a><a class="group-color-item" style="background: rgb(127, 83, 71);"></a><a class="group-color-item" style="background: rgb(196, 196, 196);"></a><a class="group-color-item" style="background: rgb(128, 128, 128);"></a><a class="group-color-item" style="background: rgb(51, 51, 51);"></a></div>
+                            </div>
                           </div>
                           <div class="tag-icon">
                             <i class="fa fa-tags" aria-hidden="true"></i>
@@ -412,5 +419,20 @@ ul.tags-wrapper {
       }
     }
   }
+}
+.group-color-dialog{
+  
+    position: relative;
+    padding: 5px;
+    line-height: 0px;
+    .group-color-item{
+      cursor: pointer;
+    width: 20px;
+    height: 20px;
+    display: inline-block;
+    border-radius: 50%;
+    transition: opacity 0.1 ease;
+    margin: 3px;
+    }
 }
 </style>

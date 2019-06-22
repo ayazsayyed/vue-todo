@@ -10,14 +10,25 @@
           <div class="col-6 text-right">
             <div class="user-icon">
               <div class="dropdown">
-                <img src="dist/assets/img/user-avatar.png" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" class="dropdown-toggle img-fluid">
+                <img
+                  src="dist/assets/img/user-avatar.png"
+                  id="dropdownMenuButton"
+                  data-toggle="dropdown"
+                  aria-haspopup="true"
+                  aria-expanded="false"
+                  class="dropdown-toggle img-fluid"
+                >
                 <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
                   <a class="dropdown-item" href="#">Action</a>
-                  <a class="dropdown-item" href="#">Another action</a>
-                  <a class="dropdown-item" href="#">Something else here</a>
+                  <a class="dropdown-item" href="#" v-if="!userLoggedIn" @click="googleLogin">Login</a>
+                  <a class="dropdown-item" href="#" v-if="userLoggedIn" @click="googleLogout">Logout</a>
+                  <a
+                    class="dropdown-item"
+                    href="#"
+                    @click="toggleFullScreen"
+                  >{{ isFullScreen ? 'Exit Full Screen' : 'Full Screen'}}</a>
                 </div>
               </div>
-              
             </div>
             <!-- <button class=" get-btn" @click="getTodos()"> Fetch Todos </button> -->
           </div>
@@ -151,14 +162,119 @@ export default {
       item: 0,
       checkkAll: false,
       newTodoText: "",
-
+      isFullScreen: false,
+      elem: document.documentElement,
+      userLoggedIn: false,
       userData: {
         todos: []
       }
     };
   },
-
+watch: {
+  isFullScreen : function(newValue, oldValue) {
+      console.log(newValue, oldValue)
+  }
+},
   methods: {
+    toggleFullScreen() {
+      if (!this.isFullScreen) {
+        document.documentElement.requestFullscreen();
+        this.isFullScreen = !this.isFullScreen;
+      } else {
+        this.closeFullscreen();
+        this.isFullScreen = !this.isFullScreen;
+      }
+    },
+
+    openFullscreen() {
+      if (this.elem.requestFullscreen) {
+        this.elem.requestFullscreen();
+      } else if (this.elem.mozRequestFullScreen) {
+        /* Firefox */
+        this.elem.mozRequestFullScreen();
+      } else if (this.elem.webkitRequestFullscreen) {
+        /* Chrome, Safari and Opera */
+        this.elem.webkitRequestFullscreen();
+      } else if (this.elem.msRequestFullscreen) {
+        /* IE/Edge */
+        this.elem.msRequestFullscreen();
+      }
+    },
+    closeFullscreen() {
+      if (document.exitFullscreen) {
+        document.exitFullscreen();
+      } else if (document.mozCancelFullScreen) {
+        /* Firefox */
+        document.mozCancelFullScreen();
+      } else if (document.webkitExitFullscreen) {
+        /* Chrome, Safari and Opera */
+        document.webkitExitFullscreen();
+      } else if (document.msExitFullscreen) {
+        /* IE/Edge */
+        document.msExitFullscreen();
+      }
+    },
+    googleLogout() {
+      let that = this;
+      var provider = new firebase.auth.GoogleAuthProvider();
+      firebase
+        .auth()
+        .signOut()
+        .then(
+          function() {
+            that.userLoggedIn = false;
+            that.showNotification("You are logged out", "alert-danger");
+          },
+          function(error) {
+            console.error("Sign Out Error", error);
+          }
+        );
+    },
+    googleLogin() {
+      let that = this;
+      var provider = new firebase.auth.GoogleAuthProvider();
+      firebase
+        .auth()
+        .signInWithPopup(provider)
+        .then(function(result) {
+          // This gives you a Google Access Token. You can use it to access the Google API.
+          var token = result.credential.accessToken;
+          // The signed-in user info.
+          var user = result.user;
+          console.log(user);
+          that.userLoggedIn = true;
+          that.$notify({
+            group: "foo",
+            text: `<div class="alert alert-success" role="alert">
+                            <p> Welcome ${user.displayName}</p> 
+                    You are logged in as ${user.email}
+                </div> `,
+
+            position: "top left",
+            duration: 10000
+          });
+          // ...
+        })
+        .catch(function(error) {
+          that.userLoggedIn = false;
+          // Handle Errors here.
+          var errorCode = error.code;
+          var errorMessage = error.message;
+          // The email of the user's account used.
+          var email = error.email;
+          // The firebase.auth.AuthCredential type that was used.
+          var credential = error.credential;
+          that.showNotification(errorMessage, "alert-danger");
+        });
+    },
+    showNotification(msg, alertType) {
+      this.$notify({
+        group: "foo",
+        text: `<div class="alert ${alertType}" role="alert">${msg}</div> `,
+        position: "top left",
+        duration: 10000
+      });
+    },
     showDetail(todoItem) {
       Bus.$emit("showDetailedTaskModal", todoItem);
     },
@@ -211,7 +327,7 @@ export default {
       }
     },
     checkLogin() {}
-  }
+  },
 };
 </script>
 <style scoped>
