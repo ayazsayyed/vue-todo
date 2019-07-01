@@ -20,18 +20,40 @@
           <div class="modal-body">
             <div class="content-wrapper">
               <div class="task-wrapper">
-                <div class="task-name">{{taskDetail.title}}</div>
+                <div class="task-name" v-if="showTitle">{{taskDetail.title}}</div>
+                <input
+                  type="text"
+                  class="form-control"
+                  :value="taskDetail.title"
+                  v-if="showEditTodoTitleField"
+                  @blur="saveTodoTitle"
+                >
                 <div class="task-actions">
-                  <i class="fa fa-edit" aria-hidden="true"></i>
+                  <i
+                    class="fa fa-edit"
+                    aria-hidden="true"
+                    @click="editTodoTitle"
+                    v-if="showTitleBtn"
+                  ></i>
                 </div>
               </div>
               <div class="task-desc task-desc mt-3 text-right">
-                <p class="text-primary add-link" @click="toggleAddDecriptionField">Add description</p>
+                <div
+                  class="task-description text-left small"
+                  v-if="showDescription"
+                >{{taskDetail.description}}</div>
+                <p
+                  class="text-primary add-link"
+                  @click="editTodoDescription"
+                  v-if="showDescriptionBtn"
+                >{{taskDetail.description ? 'Edit ' : 'Add '}}description</p>
                 <textarea
                   v-if="showAddDecriptionField"
                   class="form-control"
                   rows="3"
                   placeholder="Write a dewscription text here ..."
+                  @blur="saveTodoDescription"
+                  :value="taskDetail.description"
                 ></textarea>
               </div>
             </div>
@@ -114,6 +136,8 @@
                           class="custom-control-input"
                           id="customRadio1"
                           type="radio"
+                          v-model="taskDetail.priority"
+                          value="High"
                         >
                         <label class="custom-control-label high" for="customRadio1">
                           <div class="icon-wrapper">
@@ -129,6 +153,8 @@
                           class="custom-control-input"
                           id="customRadio2"
                           type="radio"
+                          v-model="taskDetail.priority"
+                          value="Medium"
                         >
                         <label class="custom-control-label medium" for="customRadio2">
                           <div class="icon-wrapper">
@@ -143,6 +169,8 @@
                           class="custom-control-input"
                           id="customRadio3"
                           type="radio"
+                          v-model="taskDetail.priority"
+                          value="Low"
                         >
                         <label class="custom-control-label low" for="customRadio3">
                           <div class="icon-wrapper">
@@ -156,6 +184,8 @@
                           class="custom-control-input"
                           id="customRadio4"
                           type="radio"
+                          v-model="taskDetail.priority"
+                          value="None"
                         >
                         <label class="custom-control-label none" for="customRadio4">
                           <div class="icon-wrapper">
@@ -186,81 +216,55 @@
                                 id="exampleFormControlInput1"
                                 placeholder="Enter tag"
                                 autocomplete="off"
+                                v-model="searchText"
                               >
                             </div>
+                           
                           </div>
                         </div>
                       </div>
                       <ul class="tags-wrapper">
-                        <li class="tag-item">
+                        <li class="tag-item" v-for="(tag, key) in searchTag" :key="key">
                           <div class="color-option-icon">
-                            <i class="fa fa-ellipsis-v" id="tagColorDropdoen1" aria-hidden="true"
-                            data-toggle="dropdown"
-                                aria-haspopup="true"
-                                aria-expanded="false" 
+                            <i
+                              class="fa fa-ellipsis-v"
+                              id="tagColorDropdoen1"
+                              aria-hidden="true"
+                              data-toggle="dropdown"
+                              aria-haspopup="true"
+                              aria-expanded="false"
                             ></i>
                             <div class="dropdown-menu" aria-labelledby="tagColorDropdoen1">
-                              <div class="group-color-dialog"><a class="group-color-item" style="background: rgb(0, 200, 117);"></a><a class="group-color-item" style="background: rgb(156, 211, 38);"></a><a class="group-color-item" style="background: rgb(202, 182, 65);"></a><a class="group-color-item" style="background: rgb(255, 203, 0);"></a><a class="group-color-item" style="background: rgb(120, 75, 209);"></a><a class="group-color-item" style="background: rgb(162, 93, 220);"></a><a class="group-color-item" style="background: rgb(0, 134, 192);"></a><a class="group-color-item" style="background: rgb(87, 155, 252);"></a><a class="group-color-item" style="background: rgb(102, 204, 255);"></a><a class="group-color-item" style="background: rgb(187, 51, 84);"></a><a class="group-color-item" style="background: rgb(226, 68, 92);"></a><a class="group-color-item" style="background: rgb(255, 21, 138);"></a><a class="group-color-item" style="background: rgb(255, 90, 196);"></a><a class="group-color-item" style="background: rgb(255, 100, 46);"></a><a class="group-color-item" style="background: rgb(253, 171, 61);"></a><a class="group-color-item" style="background: rgb(127, 83, 71);"></a><a class="group-color-item" style="background: rgb(196, 196, 196);"></a><a class="group-color-item" style="background: rgb(128, 128, 128);"></a><a class="group-color-item" style="background: rgb(51, 51, 51);"></a></div>
+                              <div class="group-color-dialog" >
+                                <a class="group-color-item"  v-for="(color) in colorPalete"  :style="{background:color}" @click="setTagColor(key, $event)" ></a>
+                              </div>
                             </div>
                           </div>
                           <div class="tag-icon">
-                            <i class="fa fa-tags" aria-hidden="true"></i>
+                            <i class="fa fa-tags" aria-hidden="true" :style="{color:tag.color}"></i>
                           </div>
                           <div class="tag-name">
                             <p>
-                              <strong>Work</strong>
+                              <strong>{{tag.name}}</strong>
                             </p>
                           </div>
                           <div class="action">
                             <div class="custom-control custom-checkbox mb-3">
-                              <input class="custom-control-input" id="customCheck1" type="checkbox">
-                              <label class="custom-control-label" for="customCheck1">
+                              <input
+                                class="custom-control-input"
+                                :id="key"
+                                type="checkbox"
+                                v-model="taskDetail.tags"
+                                :value="tag.name"
+                              >
+                              <label class="custom-control-label" :for="key">
                                 <span></span>
                               </label>
                             </div>
                           </div>
                         </li>
-                        <li class="tag-item">
-                          <div class="color-option-icon">
-                            <i class="fa fa-ellipsis-v" aria-hidden="true"></i>
-                          </div>
-                          <div class="tag-icon">
-                            <i class="fa fa-tags" aria-hidden="true"></i>
-                          </div>
-                          <div class="tag-name">
-                            <p>
-                              <strong>Home</strong>
-                            </p>
-                          </div>
-                          <div class="action">
-                            <div class="custom-control custom-checkbox mb-3">
-                              <input class="custom-control-input" id="customCheck2" type="checkbox">
-                              <label class="custom-control-label" for="customCheck2">
-                                <span></span>
-                              </label>
-                            </div>
-                          </div>
-                        </li>
-                        <li class="tag-item">
-                          <div class="color-option-icon">
-                            <i class="fa fa-ellipsis-v" aria-hidden="true"></i>
-                          </div>
-                          <div class="tag-icon">
-                            <i class="fa fa-tags" aria-hidden="true"></i>
-                          </div>
-                          <div class="tag-name">
-                            <p>
-                              <strong>Personal</strong>
-                            </p>
-                          </div>
-                          <div class="action">
-                            <div class="custom-control custom-checkbox mb-3">
-                              <input class="custom-control-input" id="customCheck3" type="checkbox">
-                              <label class="custom-control-label" for="customCheck3">
-                                <span></span>
-                              </label>
-                            </div>
-                          </div>
+                        <li v-if="searchTag.length<=0" class="tag-item mark" @click="createNewTag(searchText)">
+                         Create "{{searchText}}"
                         </li>
                       </ul>
                     </div>
@@ -287,7 +291,7 @@
 
           <div class="modal-footer">
             <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-            <button type="button" class="btn btn-primary">Save changes</button>
+            <button type="button" class="btn btn-primary" @click="saveTaskData">Save changes</button>
           </div>
         </div>
       </div>
@@ -297,21 +301,90 @@
 
 <script>
 import { Bus } from "./utils/bus";
+import ClickOutside from "vue-click-outside";
 export default {
   name: "todoDetailModal",
   data() {
     return {
       taskDetail: {},
-      showAddDecriptionField: false
+      showAddDecriptionField: false,
+      showEditTodoTitleField: false,
+      showTitle: true,
+      showTitleBtn: true,
+      showDescription: true,
+      showDescriptionBtn: true,
+      taskPriority: null,
+      searchText:'',
+      colorPalete:['#00C821', '#9CD326', '#CAB641', '#FFCB00', '#784BD1', '#A25DDC', '#0086C0', '#579BFC', '#66CCFF', '#BB3354', '#E2445C', '#FF158A', '#FF5AC4', '#FF642E', '#FDAB3D', '#7F5347', '#C4C4C4', '#808080', '#333333'],
+      defaultColor:'background: rgb(128, 128, 128)',
+      tags: [
+        {
+          name: "Home",
+          color: "rgb(255, 203, 0)"
+        },
+        {
+          name: "Personal",
+          color: "rgb(102, 204, 255)"
+        },
+        {
+          name: "Work",
+          color: "rgb(162, 93, 220)"
+        }
+      ]
     };
   },
   components: {
     Bus
   },
-  methods: {
-    toggleAddDecriptionField() {
-      this.showAddDecriptionField = !this.showAddDecriptionField;
+  directives: {
+    ClickOutside
+  },
+  computed:{
+    searchTag(){
+      return this.tags.filter(tag => {
+        return tag.name.toLowerCase().includes(this.searchText.toLowerCase())
+      })
     },
+  },
+
+  methods: {
+    
+    saveTaskData() {
+      console.log("taskDetail ", this.taskDetail);
+    },
+    editTodoTitle() {
+      this.showEditTodoTitleField = !this.showEditTodoTitleField;
+      this.showTitle = !this.showTitle;
+      this.showTitleBtn = !this.showTitleBtn;
+    },
+    saveTodoTitle(e) {
+      if (e.target.value.length > 0) {
+        this.taskDetail.title = e.target.value;
+        this.showEditTodoTitleField = !this.showEditTodoTitleField;
+        this.showTitle = !this.showTitle;
+        this.showTitleBtn = !this.showTitleBtn;
+      }
+    },
+    editTodoDescription() {
+      this.showDescriptionBtn = !this.showDescriptionBtn;
+      this.showAddDecriptionField = !this.showAddDecriptionField;
+      this.showDescription = !this.showDescription;
+    },
+    saveTodoDescription(e) {
+      this.taskDetail.description = e.target.value;
+      this.showAddDecriptionField = !this.showAddDecriptionField;
+      this.showDescriptionBtn = !this.showDescriptionBtn;
+      this.showDescription = !this.showDescription;
+    },
+    createNewTag(newTagName){
+      this.tags.push({'name':newTagName, 'color':this.defaultColor})
+      this.searchText = ''
+    },
+    setTagColor(key,$event){
+      console.log($event)
+      this.tags[key].color = $event.target.style.backgroundColor
+    },
+    setTaskPriority() {},
     showModal(data) {
       this.taskDetail = data;
       $("#genericPopup").modal("show");
@@ -376,6 +449,9 @@ export default {
 // }
 ul.tags-wrapper {
   padding-left: 0;
+  li.tag-item.mark {
+    cursor: pointer;
+  }
   li.tag-item {
     list-style: none;
     display: flex;
@@ -420,19 +496,18 @@ ul.tags-wrapper {
     }
   }
 }
-.group-color-dialog{
-  
-    position: relative;
-    padding: 5px;
-    line-height: 0px;
-    .group-color-item{
-      cursor: pointer;
+.group-color-dialog {
+  position: relative;
+  padding: 5px;
+  line-height: 0px;
+  .group-color-item {
+    cursor: pointer;
     width: 20px;
     height: 20px;
     display: inline-block;
     border-radius: 50%;
     transition: opacity 0.1 ease;
     margin: 3px;
-    }
+  }
 }
 </style>

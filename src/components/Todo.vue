@@ -172,18 +172,21 @@ export default {
   },
 watch: {
   isFullScreen : function(newValue, oldValue) {
-      console.log(newValue, oldValue)
   }
 },
-  methods: {
-    toggleFullScreen() {
-      if (!this.isFullScreen) {
-        document.documentElement.requestFullscreen();
-        this.isFullScreen = !this.isFullScreen;
+created(){
+  let that  = this
+    document.onfullscreenchange = function ( event ) { 
+      if (!that.isFullScreen) {
+        that.isFullScreen = true;
       } else {
-        this.closeFullscreen();
-        this.isFullScreen = !this.isFullScreen;
+        that.isFullScreen = false;
       }
+    };
+},
+  methods: {
+    toggleFullScreen() {      
+      !this.isFullScreen ? this.openFullscreen() : this.closeFullscreen()
     },
 
     openFullscreen() {
@@ -313,8 +316,11 @@ watch: {
           completed: false,
           id: 201,
           title: this.newTodoText,
+          description:'',
           userId: 1,
-          inDate: moment().format("MMM D")
+          inDate: moment().format("MMM D"),
+          priority:null,
+          tags:[],
         };
         this.userData.todos.push(newTodo);
 
