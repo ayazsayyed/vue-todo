@@ -117,7 +117,21 @@
                 >
                   <div class="card shadow">
                     <div class="card-body">
-                      <p class="description">Schedule your task by adding date and time</p>
+                      <p class="description">Schedule your task by adding date</p>
+                      <div class="form-group">
+                        <div class="input-group input-group-alternative">
+                          <div class="input-group-prepend">
+                            <span class="input-group-text">
+                              <i class="ni ni-calendar-grid-58"></i>
+                            </span>
+                          </div>
+                          <input
+                            class="form-control datepicker"
+                            placeholder="Select date"
+                            type="text"
+                          >
+                        </div>
+                      </div>
                     </div>
                   </div>
                 </div>
@@ -219,7 +233,6 @@
                                 v-model="searchText"
                               >
                             </div>
-                           
                           </div>
                         </div>
                       </div>
@@ -235,8 +248,14 @@
                               aria-expanded="false"
                             ></i>
                             <div class="dropdown-menu" aria-labelledby="tagColorDropdoen1">
-                              <div class="group-color-dialog" >
-                                <a class="group-color-item"  v-for="(color) in colorPalete"  :style="{background:color}" @click="setTagColor(key, $event)" ></a>
+                              <div class="group-color-dialog">
+                                <a
+                                  class="group-color-item"
+                                  v-for="(color, index) in colorPalete"
+                                  :key="index"
+                                  :style="{background:color}"
+                                  @click="setTagColor(key, $event)"
+                                ></a>
                               </div>
                             </div>
                           </div>
@@ -263,29 +282,16 @@
                             </div>
                           </div>
                         </li>
-                        <li v-if="searchTag.length<=0" class="tag-item mark" @click="createNewTag(searchText)">
-                         Create "{{searchText}}"
-                        </li>
+                        <li
+                          v-if="searchTag.length<=0"
+                          class="tag-item mark"
+                          @click="createNewTag(searchText)"
+                        >Create "{{searchText}}"</li>
                       </ul>
                     </div>
                   </div>
                 </div>
               </div>
-
-              <!-- <div class="task-calender">
-                <i class="fa fa-calendar datepicker" aria-hidden="true"></i>
-              </div>
-              <div class="task-priority">
-                <i class="fa fa-exclamation" aria-hidden="true"></i>
-                <i class="fa fa-exclamation" aria-hidden="true"></i>
-                <i class="fa fa-exclamation" aria-hidden="true"></i>
-                <div class="task-priority-dropdown dropdown-menu show">
-                    <p>hello world</p>
-                </div>
-              </div>
-              <div class="task-tasgs">
-                <i class="fa fa-tags" aria-hidden="true"></i>
-              </div>-->
             </div>
           </div>
 
@@ -314,9 +320,29 @@ export default {
       showDescription: true,
       showDescriptionBtn: true,
       taskPriority: null,
-      searchText:'',
-      colorPalete:['#00C821', '#9CD326', '#CAB641', '#FFCB00', '#784BD1', '#A25DDC', '#0086C0', '#579BFC', '#66CCFF', '#BB3354', '#E2445C', '#FF158A', '#FF5AC4', '#FF642E', '#FDAB3D', '#7F5347', '#C4C4C4', '#808080', '#333333'],
-      defaultColor:'background: rgb(128, 128, 128)',
+      searchText: "",
+      colorPalete: [
+        "#00C821",
+        "#9CD326",
+        "#CAB641",
+        "#FFCB00",
+        "#784BD1",
+        "#A25DDC",
+        "#0086C0",
+        "#579BFC",
+        "#66CCFF",
+        "#BB3354",
+        "#E2445C",
+        "#FF158A",
+        "#FF5AC4",
+        "#FF642E",
+        "#FDAB3D",
+        "#7F5347",
+        "#C4C4C4",
+        "#808080",
+        "#333333"
+      ],
+      defaultColor: "background: rgb(128, 128, 128)",
       tags: [
         {
           name: "Home",
@@ -339,18 +365,28 @@ export default {
   directives: {
     ClickOutside
   },
-  computed:{
-    searchTag(){
+  computed: {
+    searchTag() {
       return this.tags.filter(tag => {
-        return tag.name.toLowerCase().includes(this.searchText.toLowerCase())
-      })
-    },
+        return tag.name.toLowerCase().includes(this.searchText.toLowerCase());
+      });
+    }
   },
 
   methods: {
-    
     saveTaskData() {
       console.log("taskDetail ", this.taskDetail);
+      if (this.taskDetail.priority) {
+        if (this.taskDetail.priority === "High")
+          this.taskDetail.priorityColor = "#f5365c";
+        if (this.taskDetail.priority === "Medium")
+          this.taskDetail.priorityColor = "#ffbb33";
+        if (this.taskDetail.priority === "Low")
+          this.taskDetail.priorityColor = "#5e72e4";
+        if (this.taskDetail.priority === "None")
+          this.taskDetail.priorityColor = "#11cdef";
+      }
+      $("#genericPopup").modal("hide");
     },
     editTodoTitle() {
       this.showEditTodoTitleField = !this.showEditTodoTitleField;
@@ -358,8 +394,8 @@ export default {
       this.showTitleBtn = !this.showTitleBtn;
     },
     saveTodoTitle(e) {
-      if (e.target.value.length > 0) {
-        this.taskDetail.title = e.target.value;
+      if (e.target.value.trim().length > 0) {
+        this.taskDetail.title = e.target.value.trim();
         this.showEditTodoTitleField = !this.showEditTodoTitleField;
         this.showTitle = !this.showTitle;
         this.showTitleBtn = !this.showTitleBtn;
@@ -371,22 +407,33 @@ export default {
       this.showDescription = !this.showDescription;
     },
     saveTodoDescription(e) {
-      this.taskDetail.description = e.target.value;
+      this.taskDetail.description = e.target.value.trim();
       this.showAddDecriptionField = !this.showAddDecriptionField;
       this.showDescriptionBtn = !this.showDescriptionBtn;
       this.showDescription = !this.showDescription;
     },
-    createNewTag(newTagName){
-      this.tags.push({'name':newTagName, 'color':this.defaultColor})
-      this.searchText = ''
+    createNewTag(newTagName) {
+      this.tags.push({ name: newTagName, color: this.defaultColor });
+      this.searchText = "";
     },
-    setTagColor(key,$event){
-      console.log($event)
-      this.tags[key].color = $event.target.style.backgroundColor
+    setTagColor(key, $event) {
+      this.tags[key].color = $event.target.style.backgroundColor;
     },
     setTaskPriority() {},
+    resetModal() {
+      this.showAddDecriptionField = false;
+      this.showEditTodoTitleField = false;
+      this.showTitle = true;
+      this.showTitleBtn = true;
+      this.showDescription = true;
+      this.showDescriptionBtn = true;
+      this.taskPriority = null;
+      this.searchText = "";
+      $(".tab-pane, .nav-item a").removeClass("active show");
+    },
     showModal(data) {
       this.taskDetail = data;
+      this.resetModal();
       $("#genericPopup").modal("show");
     }
   },

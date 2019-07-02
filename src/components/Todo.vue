@@ -93,6 +93,7 @@
                       <i
                         aria-hidden="true"
                         class="material-icons"
+                        :style="{color:todo.priorityColor}"
                       >{{ todo.completed ? 'check_box' : 'check_box_outline_blank' }}</i>
                     </button>
                     <button
@@ -165,6 +166,7 @@ export default {
       isFullScreen: false,
       elem: document.documentElement,
       userLoggedIn: false,
+      priorityColor:null,
       userData: {
         todos: []
       }
@@ -321,6 +323,7 @@ created(){
           inDate: moment().format("MMM D"),
           priority:null,
           tags:[],
+          priorityColor:null
         };
         this.userData.todos.push(newTodo);
 
@@ -623,6 +626,10 @@ form input,
 .todo-item .handle-wrapper {
   width: 20px;
   color: #b5b5b5;
+  opacity: 0;
+}
+#todolist li.todo-item:hover .handle-wrapper {
+  opacity: 1;
 }
 .ghost {
   border-bottom: 1px solid #11cdef;
