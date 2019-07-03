@@ -11,7 +11,7 @@
             <div class="user-icon">
               <div class="dropdown">
                 <img
-                  src="dist/assets/img/user-avatar.png"
+                  :src="userData.profileImage ? userData.profileImage : 'dist/assets/img/user-avatar.png' "
                   id="dropdownMenuButton"
                   data-toggle="dropdown"
                   aria-haspopup="true"
@@ -20,7 +20,6 @@
                 >
                 <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
                   <a class="dropdown-item" href="#">Action</a>
-                  <a class="dropdown-item" href="#" v-if="!userLoggedIn" @click="googleLogin">Login</a>
                   <a class="dropdown-item" href="#" v-if="userLoggedIn" @click="googleLogout">Logout</a>
                   <a
                     class="dropdown-item"
@@ -143,6 +142,7 @@ import firebase from "firebase";
 import navbar from "./Navbar";
 import todoDetailModal from "./TodoDetailModal";
 import { Bus } from "./utils/bus";
+import vueStore from "./store/index";
 
 export default {
   components: {
@@ -168,15 +168,26 @@ export default {
       userLoggedIn: false,
       priorityColor:null,
       userData: {
-        todos: []
-      }
+      },
+      userInfo:''
     };
+  },
+  mounted() {
+    if (localStorage.getItem("user")) {
+      const tempData = JSON.parse(localStorage.getItem("user"));
+      console.log(tempData);
+    }
   },
 watch: {
   isFullScreen : function(newValue, oldValue) {
   }
 },
 created(){
+  this.userData = {...vueStore.state.userData};
+  this.userData.todos = []
+  console.log('adasd',this.userData);
+  
+  this.userLoggedIn = true;
   let that  = this
     document.onfullscreenchange = function ( event ) { 
       if (!that.isFullScreen) {
@@ -228,49 +239,13 @@ created(){
         .then(
           function() {
             that.userLoggedIn = false;
+            that.$router.replace("/");
             that.showNotification("You are logged out", "alert-danger");
           },
           function(error) {
             console.error("Sign Out Error", error);
           }
         );
-    },
-    googleLogin() {
-      let that = this;
-      var provider = new firebase.auth.GoogleAuthProvider();
-      firebase
-        .auth()
-        .signInWithPopup(provider)
-        .then(function(result) {
-          // This gives you a Google Access Token. You can use it to access the Google API.
-          var token = result.credential.accessToken;
-          // The signed-in user info.
-          var user = result.user;
-          console.log(user);
-          that.userLoggedIn = true;
-          that.$notify({
-            group: "foo",
-            text: `<div class="alert alert-success" role="alert">
-                            <p> Welcome ${user.displayName}</p> 
-                    You are logged in as ${user.email}
-                </div> `,
-
-            position: "top left",
-            duration: 10000
-          });
-          // ...
-        })
-        .catch(function(error) {
-          that.userLoggedIn = false;
-          // Handle Errors here.
-          var errorCode = error.code;
-          var errorMessage = error.message;
-          // The email of the user's account used.
-          var email = error.email;
-          // The firebase.auth.AuthCredential type that was used.
-          var credential = error.credential;
-          that.showNotification(errorMessage, "alert-danger");
-        });
     },
     showNotification(msg, alertType) {
       this.$notify({
@@ -325,6 +300,7 @@ created(){
           tags:[],
           priorityColor:null
         };
+        
         this.userData.todos.push(newTodo);
 
         localStorage.setItem("user", JSON.stringify(this.userData));

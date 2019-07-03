@@ -8,6 +8,8 @@ import login from './components/Login.vue'
 import PageNotFound from './components/Page404.vue'
 import todo from './components/Todo.vue'
 import register from './components/Register.vue'
+import store from './components/store/index'
+
 
 const firebaseConfig = {
   apiKey: "AIzaSyAjBiYXlMX5w-AoXmc2FTi7sfgHr8He7S8",
@@ -38,6 +40,7 @@ const router = new VueRouter({
 })
 new Vue({
   router,
+  store,
   el: '#app',
   render: h => h(App)
 })
