@@ -1,3 +1,15 @@
 export default {
-    allBoards: state => state.boards,
-  }
+
+  filterTags: state => {
+    return (id) => state.allTags.filter(tag => {
+      if (tag)
+        return tag.name.toLowerCase().includes(id.toLowerCase());
+    });
+
+    
+  },
+
+  colorPalete: state => state.colorPalete,
+  getTodos: state => state.todos
+
+}

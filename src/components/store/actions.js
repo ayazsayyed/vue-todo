@@ -2,8 +2,26 @@ const INITIAL_DATA_URL = "https://raw.githubusercontent.com/ayazsayyed/Vue-Proje
 import axios from "axios"
 
 export default {
-        async userData({ commit }, payload) {
+    async userData({ commit }, payload) {
         commit("SAVE_USERDATA", payload)
+    },
+    async createNewTodo({ commit }, payload) {
+        commit("CREATE_NEW_TODO", payload)
+    },
+    async addNewTag({ commit }, payload) {
+        commit("ADD_NEW_TAG", payload)
+    },
+    async markAsComplete({ commit }, payload) {
+        commit("MARK_AS_COMPLETE", payload)
+    },
+    async updateTodo({ commit }, payload) {
+        commit("UPDATE_TODO", payload)
+    },
+    async deleteTodo({ commit }, payload) {
+        commit("DELETE_TODO", payload)
+    },
+    async changeTagColor({ commit }, tag) {
+        commit('CHANGE_TAG_COLOR', tag);
     },
 
     // async fetchData({ commit }) {

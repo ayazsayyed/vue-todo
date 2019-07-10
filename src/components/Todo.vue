@@ -34,7 +34,7 @@
         </div>
         <div class="row">
           <div class="col-4">
-            <span class="badge badge-primary">Total : {{todos.length || 0}}</span>
+            <span class="badge badge-primary">Total : {{getTodos.length || 0}}</span>
             <!-- <h6 class="count total">Total : {{todos.length}}</h6> -->
           </div>
           <div class="col-4">
@@ -67,12 +67,12 @@
 
         <ul id="todo-list">
           <VuePerfectScrollbar class="scroll-area">
-            <draggable handle=".handle-wrapper" ghost-class="ghost" :list="todos">
+            <draggable handle=".handle-wrapper" ghost-class="ghost" :list="getTodos">
               <transition-group>
                 <li
                   class="todo-item"
                   :class="todo.completed ? 'done': 'undone'"
-                  v-for="(todo,key) in todos"
+                  v-for="(todo,key) in getTodos"
                   :key="key"
                 >
                   <div class="handle-wrapper">
@@ -96,7 +96,7 @@
                       >{{ todo.completed ? 'check_box' : 'check_box_outline_blank' }}</i>
                     </button>
                     <button
-                      @click="deleteTodo(key)"
+                      @click="removeTodo(key)"
                       type="button"
                       aria-label="Delete"
                       title="Delete"
@@ -143,6 +143,8 @@ import navbar from "./Navbar";
 import todoDetailModal from "./TodoDetailModal";
 import { Bus } from "./utils/bus";
 import vueStore from "./store/index";
+import { mapActions, mapGetters } from "vuex";
+const uuidv4 = require('uuid/v4');
 
 export default {
   components: {
@@ -197,7 +199,11 @@ created(){
       }
     };
 },
+computed:{
+  ...mapGetters(["getTodos"]),
+},
   methods: {
+    ...mapActions(["createNewTodo", "markAsComplete", "deleteTodo"]),
     toggleFullScreen() {      
       !this.isFullScreen ? this.openFullscreen() : this.closeFullscreen()
     },
@@ -271,19 +277,15 @@ created(){
         });
     },
     updateTodos() {
-      this.completedTodos = this.todos.filter(item => item.completed);
-      this.pendingTodos = this.todos.filter(item => !item.completed);
+      this.completedTodos = this.getTodos.filter(item => item.completed);
+      this.pendingTodos = this.getTodos.filter(item => !item.completed);
     },
-    deleteTodo(key) {
-      this.todos.splice(key, 1);
+    removeTodo(key) {
+      this.deleteTodo(key)
       this.updateTodos();
     },
     completeTodo(key) {
-      if (this.todos[key].completed) {
-        this.todos[key].completed = false;
-      } else {
-        this.todos[key].completed = true;
-      }
+      this.markAsComplete(key)
       this.updateTodos();
     },
     addnewTodo(e) {
@@ -291,21 +293,18 @@ created(){
         e.preventDefault();
         let newTodo = {
           completed: false,
-          id: 201,
+          id: uuidv4(),
           title: this.newTodoText,
-          description:'',
-          userId: 1,
+          description:null,
           inDate: moment().format("MMM D"),
           priority:null,
           tags:[],
           priorityColor:null
         };
-        
-        this.userData.todos.push(newTodo);
+        this.createNewTodo(newTodo)
+        // this.userData.todos.push(newTodo);
 
-        localStorage.setItem("user", JSON.stringify(this.userData));
-        console.log(this.userData);
-        this.todos.unshift(newTodo);
+        // this.todos.unshift(newTodo);
         newTodo.id++;
         this.newTodoText = "";
         this.updateTodos();

@@ -2,14 +2,36 @@ import Vue from "vue"
 export default {
     // Set Initial Data
     SAVE_USERDATA(state, payload) {
-      console.log('userData', state, payload)
         state.userData = payload
     },
-    SAVE_TASKBOARD(state, payload) {
-        console.log('state', state)
-        console.log('payload', payload);
-        state.boards.push(payload)
+    ADD_NEW_TAG(state, tagName = payload) {
+        state.allTags.push({name:tagName, color:state.defaultTagColor})
     },
+    CREATE_NEW_TODO(state, payload) {
+        state.todos.unshift(payload)
+    },
+    MARK_AS_COMPLETE(state, key = payload) {
+      console.log('state.todos[key] ', state.todos[key]);
+      
+      if (state.todos[key].completed) {
+        state.todos[key].completed = false;
+      } else {
+        state.todos[key].completed = true;
+      }
+    },
+    DELETE_TODO(state, key = payload) { 
+      
+      state.todos.splice(key, 1);
+    },
+    UPDATE_TODO(state, payload) { 
+      state.todos.forEach(element => {
+        if(element.id == payload.id){
+          console.log('UPDATE ',element);
+        }
+      });
+    },
+
+    CHANGE_TAG_COLOR: (state, payload) => state.allTags[payload.key].color =  payload.color,
     // Archive Task Board
     ARCHIVE_TASKBOARD(state, payload) {
         console.log('state ', state);

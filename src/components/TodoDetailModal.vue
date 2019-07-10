@@ -308,6 +308,8 @@
 <script>
 import { Bus } from "./utils/bus";
 import ClickOutside from "vue-click-outside";
+import vueStore from "./store/index";
+import { mapActions, mapGetters } from "vuex";
 export default {
   name: "todoDetailModal",
   data() {
@@ -321,27 +323,7 @@ export default {
       showDescriptionBtn: true,
       taskPriority: null,
       searchText: "",
-      colorPalete: [
-        "#00C821",
-        "#9CD326",
-        "#CAB641",
-        "#FFCB00",
-        "#784BD1",
-        "#A25DDC",
-        "#0086C0",
-        "#579BFC",
-        "#66CCFF",
-        "#BB3354",
-        "#E2445C",
-        "#FF158A",
-        "#FF5AC4",
-        "#FF642E",
-        "#FDAB3D",
-        "#7F5347",
-        "#C4C4C4",
-        "#808080",
-        "#333333"
-      ],
+      
       defaultColor: "background: rgb(128, 128, 128)",
       tags: [
         {
@@ -366,14 +348,20 @@ export default {
     ClickOutside
   },
   computed: {
+    ...mapGetters(["colorPalete"]),
+
+    // searchTag() {
+    //   return this.tags.filter(tag => {
+    //     return tag.name.toLowerCase().includes(this.searchText.toLowerCase());
+    //   });
+    // }
     searchTag() {
-      return this.tags.filter(tag => {
-        return tag.name.toLowerCase().includes(this.searchText.toLowerCase());
-      });
+      return vueStore.getters.filterTags(this.searchText)
     }
   },
 
   methods: {
+    ...mapActions(["addNewTag", "changeTagColor"]),
     saveTaskData() {
       console.log("taskDetail ", this.taskDetail);
       if (this.taskDetail.priority) {
@@ -413,11 +401,12 @@ export default {
       this.showDescription = !this.showDescription;
     },
     createNewTag(newTagName) {
-      this.tags.push({ name: newTagName, color: this.defaultColor });
+      this.addNewTag(newTagName)
       this.searchText = "";
     },
     setTagColor(key, $event) {
-      this.tags[key].color = $event.target.style.backgroundColor;
+      this.changeTagColor({key, color: $event.target.style.backgroundColor})
+      // this.tags[key].color = $event.target.style.backgroundColor;
     },
     setTaskPriority() {},
     resetModal() {
