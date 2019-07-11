@@ -5,9 +5,9 @@ export default {
   temp:'',
   data: [],
   todos: [
-    { "completed": false, "id": 201, "title": "todo One", "description": null, "inDate": "Jul 10", "priority": "Low", "tags": ["Home", "Personal"], "priorityColor": "#5e72e4" }, 
-    {"completed":false,"id":202,"title":"todo Two","description":"HELLO WORLD","inDate":"Jul 10","priority":"High","tags":["Personal"],"priorityColor":"#f5365c"},
-    { "completed": false, "id": 203, "title": "todo Three", "description": null, "inDate": "Jul 10", "priority": "Medium", "tags": ["Work", "Home", "Personal"], "priorityColor": "#5e72e4" }
+    { "completed": false, "id": 201, "title": "Standup meeting with the team @5pm", "description": null, "inDate": "Jul 10", "priority": "Low", "tags": [{"name":"Personal","color":"rgb(102, 204, 255)"}], "priorityColor": "#5e72e4" }, 
+    {"completed":false,"id":202,"title":"Order mobile phone from Amazon.in","description":"HELLO WORLD","inDate":"Jul 10","priority":"High","tags":[{"name":"Home","color":"rgb(255, 203, 0)"},{"name":"Personal","color":"rgb(102, 204, 255)"}],"priorityColor":"#f5365c"},
+    { "completed": false, "id": 203, "title": "Design, Develop and Apps to Netlify for Clients", "description": null, "inDate": "Jul 10", "priority": "Medium", "tags": [{"name":"Home","color":"rgb(255, 203, 0)"}], "priorityColor": "#5e72e4" }
   ],
   allTags: [
     {

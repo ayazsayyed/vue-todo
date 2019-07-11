@@ -27,7 +27,7 @@
                   :value="taskDetail.title"
                   v-if="showEditTodoTitleField"
                   @blur="saveTodoTitle"
-                >
+                />
                 <div class="task-actions">
                   <i
                     class="fa fa-edit"
@@ -129,7 +129,7 @@
                             class="form-control datepicker"
                             placeholder="Select date"
                             type="text"
-                          >
+                          />
                         </div>
                       </div>
                     </div>
@@ -152,7 +152,7 @@
                           type="radio"
                           v-model="taskDetail.priority"
                           value="High"
-                        >
+                        />
                         <label class="custom-control-label high" for="customRadio1">
                           <div class="icon-wrapper">
                             <i class="fa fa-exclamation" aria-hidden="true"></i>
@@ -169,7 +169,7 @@
                           type="radio"
                           v-model="taskDetail.priority"
                           value="Medium"
-                        >
+                        />
                         <label class="custom-control-label medium" for="customRadio2">
                           <div class="icon-wrapper">
                             <i class="fa fa-exclamation" aria-hidden="true"></i>
@@ -185,7 +185,7 @@
                           type="radio"
                           v-model="taskDetail.priority"
                           value="Low"
-                        >
+                        />
                         <label class="custom-control-label low" for="customRadio3">
                           <div class="icon-wrapper">
                             <i class="fa fa-exclamation" aria-hidden="true"></i>
@@ -200,7 +200,7 @@
                           type="radio"
                           v-model="taskDetail.priority"
                           value="None"
-                        >
+                        />
                         <label class="custom-control-label none" for="customRadio4">
                           <div class="icon-wrapper">
                             <i class="fa fa-exclamation" aria-hidden="true"></i>
@@ -231,7 +231,8 @@
                                 placeholder="Enter tag"
                                 autocomplete="off"
                                 v-model="searchText"
-                              >
+                                v-on:keydown.enter="createNewTag(searchText)"
+                              />
                             </div>
                           </div>
                         </div>
@@ -274,8 +275,8 @@
                                 :id="key"
                                 type="checkbox"
                                 v-model="taskDetail.tags"
-                                :value="tag.name"
-                              >
+                                :value="tag"
+                              />
                               <label class="custom-control-label" :for="key">
                                 <span></span>
                               </label>
@@ -323,7 +324,7 @@ export default {
       showDescriptionBtn: true,
       taskPriority: null,
       searchText: "",
-      
+
       defaultColor: "background: rgb(128, 128, 128)",
       tags: [
         {
@@ -348,7 +349,7 @@ export default {
     ClickOutside
   },
   computed: {
-    ...mapGetters(["colorPalete"]),
+    ...mapGetters(["colorPalete", "getAllTags"]),
 
     // searchTag() {
     //   return this.tags.filter(tag => {
@@ -356,14 +357,13 @@ export default {
     //   });
     // }
     searchTag() {
-      return vueStore.getters.filterTags(this.searchText)
+      return vueStore.getters.filterTags(this.searchText);
     }
   },
 
   methods: {
-    ...mapActions(["addNewTag", "changeTagColor"]),
+    ...mapActions(["addNewTag", "changeTagColor", "updateTodoTags"]),
     saveTaskData() {
-      console.log("taskDetail ", this.taskDetail);
       if (this.taskDetail.priority) {
         if (this.taskDetail.priority === "High")
           this.taskDetail.priorityColor = "#f5365c";
@@ -374,6 +374,10 @@ export default {
         if (this.taskDetail.priority === "None")
           this.taskDetail.priorityColor = "#11cdef";
       }
+      this.updateTodoTags({
+        id: this.taskDetail.id,
+        tags: this.taskDetail.tags
+      });
       $("#genericPopup").modal("hide");
     },
     editTodoTitle() {
@@ -401,11 +405,11 @@ export default {
       this.showDescription = !this.showDescription;
     },
     createNewTag(newTagName) {
-      this.addNewTag(newTagName)
+      this.addNewTag(newTagName);
       this.searchText = "";
     },
     setTagColor(key, $event) {
-      this.changeTagColor({key, color: $event.target.style.backgroundColor})
+      this.changeTagColor({ key, color: $event.target.style.backgroundColor });
       // this.tags[key].color = $event.target.style.backgroundColor;
     },
     setTaskPriority() {},
@@ -422,6 +426,8 @@ export default {
     },
     showModal(data) {
       this.taskDetail = data;
+      console.log("this.taskDetail ", this.taskDetail);
+
       this.resetModal();
       $("#genericPopup").modal("show");
     }

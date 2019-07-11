@@ -1,7 +1,7 @@
 <template>
   <div class="main-wrapper">
     <section class="section pb-0 main-section bg-gradient-info">
-      <navbar/>
+      <navbar />
       <main class="container card shadow shadow-lg--hover mt-5" id="todolist">
         <div class="row mb-3">
           <div class="col-6">
@@ -18,7 +18,7 @@
                   aria-haspopup="true"
                   aria-expanded="false"
                   class="dropdown-toggle img-fluid"
-                >
+                />
                 <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
                   <a class="dropdown-item" href="#">Action</a>
                   <a class="dropdown-item" href="#" v-if="userLoggedIn" @click="googleLogout">Logout</a>
@@ -56,7 +56,7 @@
                 v-on:keydown.enter="addnewTodo($event)"
                 autocomplete="off"
                 v-model.trim="newTodoText"
-              >
+              />
               <i
                 class="fa fa-arrow-right submit-icon"
                 @click="addnewTodo($event)"
@@ -80,7 +80,24 @@
                     <i class="fa fa-ellipsis-v" aria-hidden="true"></i>
                     <i class="fa fa-ellipsis-v" aria-hidden="true"></i>
                   </div>
-                  <span class="label todo-title" @click="showDetail(todo)">{{todo.title}}</span>
+                  <div class="todo-info">
+                    <span class="label todo-title" @click="showDetail(todo)">{{todo.title}}</span>
+                    <span class="label todo-description" v-if="todo.description">
+                      <i class="fa fa-commenting-o" aria-hidden="true"></i>
+                    </span>
+                    <span class="label todo-tags" v-if="todo.tags">
+                      <span
+                        class="badge badge-pill badge-info"
+                        :style="{background:tag.color, color:'#fff'}"
+                        v-for="(tag, key) in todo.tags"
+                        :key="key"
+                      >
+                        <i class="fa fa-tag" aria-hidden="true"></i>
+                        {{tag.name}}
+                      </span>
+                    </span>
+                  </div>
+
                   <span class="date">{{todo.inDate}}</span>
                   <div class="actions">
                     <button
@@ -129,8 +146,8 @@
         </div>
       </main>
     </section>
-    <notifications group="foo" position="top right" class="my-style" width="400"/>
-    <todoDetailModal/>
+    <notifications group="foo" position="top right" class="my-style" width="400" />
+    <todoDetailModal />
   </div>
 </template>
 
@@ -145,7 +162,7 @@ import todoDetailModal from "./TodoDetailModal";
 import { Bus } from "./utils/bus";
 import vueStore from "./store/index";
 import { mapActions, mapGetters } from "vuex";
-const uuidv4 = require('uuid/v4');
+const uuidv4 = require("uuid/v4");
 
 export default {
   components: {
@@ -169,37 +186,33 @@ export default {
       isFullScreen: false,
       elem: document.documentElement,
       userLoggedIn: false,
-      priorityColor:null,
-      userData: {
-      },
-      userInfo:''
+      priorityColor: null,
+      userData: {},
+      userInfo: ""
     };
   },
-  mounted() {
+  mounted() {},
+  watch: {
+    isFullScreen: function(newValue, oldValue) {}
   },
-watch: {
-  isFullScreen : function(newValue, oldValue) {
-  }
-},
-created(){
-  
-  this.userLoggedIn = true;
-  let that  = this
-    document.onfullscreenchange = function ( event ) { 
+  created() {
+    this.userLoggedIn = true;
+    let that = this;
+    document.onfullscreenchange = function(event) {
       if (!that.isFullScreen) {
         that.isFullScreen = true;
       } else {
         that.isFullScreen = false;
       }
     };
-},
-computed:{
-  ...mapGetters(["getTodos", "getUserData"]),
-},
+  },
+  computed: {
+    ...mapGetters(["getTodos", "getUserData"])
+  },
   methods: {
     ...mapActions(["createNewTodo", "markAsComplete", "deleteTodo"]),
-    toggleFullScreen() {      
-      !this.isFullScreen ? this.openFullscreen() : this.closeFullscreen()
+    toggleFullScreen() {
+      !this.isFullScreen ? this.openFullscreen() : this.closeFullscreen();
     },
 
     openFullscreen() {
@@ -275,11 +288,11 @@ computed:{
       this.pendingTodos = this.getTodos.filter(item => !item.completed);
     },
     removeTodo(key) {
-      this.deleteTodo(key)
+      this.deleteTodo(key);
       this.updateTodos();
     },
     completeTodo(key) {
-      this.markAsComplete(key)
+      this.markAsComplete(key);
       this.updateTodos();
     },
     addnewTodo(e) {
@@ -289,13 +302,13 @@ computed:{
           completed: false,
           id: uuidv4(),
           title: this.newTodoText,
-          description:null,
+          description: null,
           inDate: moment().format("MMM D"),
-          priority:null,
-          tags:[],
-          priorityColor:null
+          priority: null,
+          tags: [],
+          priorityColor: null
         };
-        this.createNewTodo(newTodo)
+        this.createNewTodo(newTodo);
         // this.userData.todos.push(newTodo);
 
         // this.todos.unshift(newTodo);
@@ -305,7 +318,7 @@ computed:{
       }
     },
     checkLogin() {}
-  },
+  }
 };
 </script>
 <style scoped>
@@ -390,6 +403,9 @@ section.main-section {
 #todolist .label {
   position: relative;
   transition: opacity 0.2s linear;
+}
+#todolist .label.todo-title {
+  display: block;
 }
 #todolist .done .label {
   opacity: 0.6;
@@ -577,7 +593,7 @@ form input,
 .navbar-dark .navbar-brand {
   font-size: 20px;
 }
-.todo-title {
+.todo-info {
   flex: 1 70%;
 }
 .date {
@@ -607,5 +623,22 @@ form input,
   width: 40px;
   cursor: pointer;
   border-radius: 50%;
+}
+.label.todo-description {
+  font-size: 16px;
+  background: #dedede;
+  padding: 5px 8px;
+  border-radius: 6px;
+  color: #000;
+  line-height: normal;
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+}
+.badge.badge-pill.badge-info {
+  font-size: 11px;
+  margin-right: 5px;
+  opacity: 0.8;
+  text-transform: capitalize;
 }
 </style>

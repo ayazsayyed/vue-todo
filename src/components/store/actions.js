@@ -23,6 +23,9 @@ export default {
     async changeTagColor({ commit }, tag) {
         commit('CHANGE_TAG_COLOR', tag);
     },
+    async updateTodoTags({ commit }, payload) {        
+        commit('UPDATE_TOD_TAGS', payload);
+    },
 
     // async fetchData({ commit }) {
     //     console.log('asd')
