@@ -80,6 +80,7 @@ import firebase from "firebase";
 import todoDetailModal from "./TodoDetailModal";
 import { Bus } from "./utils/bus";
 import vueStore from "./store/index";
+import { mapActions, mapGetters } from "vuex";
 
 export default {
   name: "Login",
@@ -93,6 +94,7 @@ export default {
     };
   },
   methods: {
+    ...mapActions(["saveUserData"]),
     login(e) {
       e.preventDefault();
       let email = e.target.elements.email.value;
@@ -103,6 +105,7 @@ export default {
         .then(
           user => {
             console.log(user);
+            this.saveUserData({uid:user.uid, name:user.displayName, email:user.email,displayImage:user.photoURL})
 
             this.$router.replace("todo");
           },
@@ -142,7 +145,7 @@ export default {
         email:user.email
       }
       vueStore
-        .dispatch("userData", data)
+        .dispatch("saveUserData", data)
         .then(something => {
           console.log("done");
         })

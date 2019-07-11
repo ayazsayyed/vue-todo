@@ -6,12 +6,13 @@
         <div class="row mb-3">
           <div class="col-6">
             <h1>{{title}}</h1>
+            <p>{{userData.name}}</p>
           </div>
           <div class="col-6 text-right">
             <div class="user-icon">
               <div class="dropdown">
                 <img
-                  :src="userData.profileImage ? userData.profileImage : 'dist/assets/img/user-avatar.png' "
+                  :src="getUserData.profileImage ? getUserData.profileImage : 'dist/assets/img/user-avatar.png' "
                   id="dropdownMenuButton"
                   data-toggle="dropdown"
                   aria-haspopup="true"
@@ -175,19 +176,12 @@ export default {
     };
   },
   mounted() {
-    if (localStorage.getItem("user")) {
-      const tempData = JSON.parse(localStorage.getItem("user"));
-      console.log(tempData);
-    }
   },
 watch: {
   isFullScreen : function(newValue, oldValue) {
   }
 },
 created(){
-  this.userData = {...vueStore.state.userData};
-  this.userData.todos = []
-  console.log('adasd',this.userData);
   
   this.userLoggedIn = true;
   let that  = this
@@ -200,7 +194,7 @@ created(){
     };
 },
 computed:{
-  ...mapGetters(["getTodos"]),
+  ...mapGetters(["getTodos", "getUserData"]),
 },
   methods: {
     ...mapActions(["createNewTodo", "markAsComplete", "deleteTodo"]),

@@ -2,8 +2,8 @@ const INITIAL_DATA_URL = "https://raw.githubusercontent.com/ayazsayyed/Vue-Proje
 import axios from "axios"
 
 export default {
-    async userData({ commit }, payload) {
-        commit("SAVE_USERDATA", payload)
+    async saveUserData({ commit }, payload) {
+        commit("SAVE_USER_DATA", payload)
     },
     async createNewTodo({ commit }, payload) {
         commit("CREATE_NEW_TODO", payload)

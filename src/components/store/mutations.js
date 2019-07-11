@@ -1,7 +1,7 @@
 import Vue from "vue"
 export default {
     // Set Initial Data
-    SAVE_USERDATA(state, payload) {
+    SAVE_USER_DATA(state, payload) {
         state.userData = payload
     },
     ADD_NEW_TAG(state, tagName = payload) {
