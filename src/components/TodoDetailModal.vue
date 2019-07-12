@@ -67,19 +67,6 @@
                   <li class="nav-item">
                     <a
                       class="nav-link mb-sm-3 mb-md-0"
-                      id="tabs-icons-text-1-tab"
-                      data-toggle="tab"
-                      href="#tabs-icons-text-1"
-                      role="tab"
-                      aria-controls="tabs-icons-text-1"
-                      aria-selected="true"
-                    >
-                      <i class="fa fa-calendar mr-2" aria-hidden="true"></i>Calendar
-                    </a>
-                  </li>
-                  <li class="nav-item">
-                    <a
-                      class="nav-link mb-sm-3 mb-md-0"
                       id="tabs-icons-text-2-tab"
                       data-toggle="tab"
                       href="#tabs-icons-text-2"
@@ -109,32 +96,6 @@
               </div>
 
               <div class="tab-content" id="myTabContent">
-                <div
-                  class="tab-pane fade task-calendar"
-                  id="tabs-icons-text-1"
-                  role="tabpanel"
-                  aria-labelledby="tabs-icons-text-1-tab"
-                >
-                  <div class="card shadow">
-                    <div class="card-body">
-                      <p class="description">Schedule your task by adding date</p>
-                      <div class="form-group">
-                        <div class="input-group input-group-alternative">
-                          <div class="input-group-prepend">
-                            <span class="input-group-text">
-                              <i class="ni ni-calendar-grid-58"></i>
-                            </span>
-                          </div>
-                          <input
-                            class="form-control datepicker"
-                            placeholder="Select date"
-                            type="text"
-                          />
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
                 <div
                   class="tab-pane fade task-priority"
                   id="tabs-icons-text-2"
@@ -324,22 +285,6 @@ export default {
       showDescriptionBtn: true,
       taskPriority: null,
       searchText: "",
-
-      defaultColor: "background: rgb(128, 128, 128)",
-      tags: [
-        {
-          name: "Home",
-          color: "rgb(255, 203, 0)"
-        },
-        {
-          name: "Personal",
-          color: "rgb(102, 204, 255)"
-        },
-        {
-          name: "Work",
-          color: "rgb(162, 93, 220)"
-        }
-      ]
     };
   },
   components: {
@@ -410,7 +355,6 @@ export default {
     },
     setTagColor(key, $event) {
       this.changeTagColor({ key, color: $event.target.style.backgroundColor });
-      // this.tags[key].color = $event.target.style.backgroundColor;
     },
     setTaskPriority() {},
     resetModal() {
@@ -426,8 +370,6 @@ export default {
     },
     showModal(data) {
       this.taskDetail = data;
-      console.log("this.taskDetail ", this.taskDetail);
-
       this.resetModal();
       $("#genericPopup").modal("show");
     }

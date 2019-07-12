@@ -2,7 +2,7 @@
   <div class="main-wrapper">
     <section class="section pb-0 main-section bg-gradient-info">
       <navbar />
-      <main class="container card shadow shadow-lg--hover mt-5" id="todolist">
+      <main class="container card shadow shadow-lg--hover mt-3" id="todolist">
         <div class="row mb-3">
           <div class="col-6">
             <h1>{{title}}</h1>
@@ -20,7 +20,6 @@
                   class="dropdown-toggle img-fluid"
                 />
                 <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                  <a class="dropdown-item" href="#">Action</a>
                   <a class="dropdown-item" href="#" v-if="userLoggedIn" @click="googleLogout">Logout</a>
                   <a
                     class="dropdown-item"
@@ -30,7 +29,6 @@
                 </div>
               </div>
             </div>
-            <!-- <button class=" get-btn" @click="getTodos()"> Fetch Todos </button> -->
           </div>
         </div>
         <div class="row">
@@ -80,8 +78,8 @@
                     <i class="fa fa-ellipsis-v" aria-hidden="true"></i>
                     <i class="fa fa-ellipsis-v" aria-hidden="true"></i>
                   </div>
-                  <div class="todo-info">
-                    <span class="label todo-title" @click="showDetail(todo)">{{todo.title}}</span>
+                  <div class="todo-info" @click="showDetail(todo)">
+                    <span class="label todo-title">{{todo.title}}</span>
                     <span class="label todo-description" v-if="todo.description">
                       <i class="fa fa-commenting-o" aria-hidden="true"></i>
                     </span>
@@ -175,12 +173,10 @@ export default {
   name: "Todo",
   data: function() {
     return {
-      title: "LOGIN",
       title: "TODO-LIST",
       todos: [],
       completedTodos: 0,
       pendingTodos: 0,
-      item: 0,
       checkkAll: false,
       newTodoText: "",
       isFullScreen: false,
@@ -205,6 +201,7 @@ export default {
         that.isFullScreen = false;
       }
     };
+    this.updateTodos();
   },
   computed: {
     ...mapGetters(["getTodos", "getUserData"])
@@ -252,8 +249,8 @@ export default {
         .then(
           function() {
             that.userLoggedIn = false;
-            that.$router.replace("/");
             that.showNotification("You are logged out", "alert-danger");
+            that.$router.replace("/");
           },
           function(error) {
             console.error("Sign Out Error", error);
@@ -640,5 +637,17 @@ form input,
   margin-right: 5px;
   opacity: 0.8;
   text-transform: capitalize;
+}
+@media screen and (max-width: 370px) {
+  #todolist {
+    max-width: 400px;
+    padding: 1rem;
+  }
+}
+@media screen and (max-width: 768px) {
+  #todolist {
+    max-width: 650px;
+    padding: 1.25rem;
+  }
 }
 </style>

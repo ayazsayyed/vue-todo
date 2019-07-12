@@ -13,5 +13,6 @@ export default {
   getTodos: state => state.todos,
   getUserData: state => state.userData,
   getAllTags: state => state.allTags,
+  clearAllTodos: state => state.todos = []
 
 }
