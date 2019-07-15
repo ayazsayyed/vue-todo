@@ -272,14 +272,6 @@ export default {
       this.todos = [];
       this.updateTodos();
     },
-    getTodos() {
-      fetch("https://jsonplaceholder.typicode.com/todos")
-        .then(response => response.json())
-        .then(json => {
-          this.todos = json;
-          this.updateTodos();
-        });
-    },
     updateTodos() {
       this.completedTodos = this.getTodos.filter(item => item.completed);
       this.pendingTodos = this.getTodos.filter(item => !item.completed);

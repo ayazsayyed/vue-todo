@@ -12,7 +12,6 @@ export default {
   colorPalete: state => state.colorPalete,
   getTodos: state => state.todos,
   getUserData: state => state.userData,
-  getAllTags: state => state.allTags,
-  clearAllTodos: state => state.todos = []
+  // getAllTags: state => state.allTags,
 
 }
