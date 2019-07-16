@@ -73,17 +73,18 @@
                   :class="todo.completed ? 'done': 'undone'"
                   v-for="(todo,key) in getTodos"
                   :key="key"
+                  @click="showDetail(todo, $event)"
                 >
                   <div class="handle-wrapper">
                     <i class="fa fa-ellipsis-v" aria-hidden="true"></i>
                     <i class="fa fa-ellipsis-v" aria-hidden="true"></i>
                   </div>
-                  <div class="todo-info" @click="showDetail(todo)">
+                  <div class="todo-info">
                     <span class="label todo-title">{{todo.title}}</span>
-                    <span class="label todo-description" v-if="todo.description">
+                    <!-- <span class="label todo-description" v-if="todo.description">
                       <i class="fa fa-commenting-o" aria-hidden="true"></i>
-                    </span>
-                    <span class="label todo-tags" v-if="todo.tags">
+                    </span>-->
+                    <!-- <span class="label todo-tags" v-if="todo.tags">
                       <span
                         class="badge badge-pill badge-info"
                         :style="{background:tag.color, color:'#fff'}"
@@ -93,26 +94,69 @@
                         <i class="fa fa-tag" aria-hidden="true"></i>
                         {{tag.name}}
                       </span>
-                    </span>
+                    </span>-->
+                  </div>
+                  <div class="todo-priority">
+                    <div class="priority-dot" :style="{background:todo.priorityColor}"></div>
+                    <span>{{todo.priority }} Priority</span>
+                  </div>
+                  <div class="todo-tags">
+                    <i
+                      class="fa fa-tag"
+                      aria-hidden="true"
+                      data-toggle="dropdown"
+                      aria-haspopup="true"
+                      aria-expanded="false"
+                    ></i>
+                    <div class="dropdown-menu" v-if="todo.tags.length <= 0">
+                      <div class="dropdown-header">
+                        <i class="fa fa-tag" aria-hidden="true"></i> Tags
+                      </div>
+                      <div class="no-tags">No tags attached</div>
+                    </div>
+                    <div class="dropdown-menu" v-if="todo.tags.length > 0">
+                      <div class="dropdown-header">
+                        <i class="fa fa-tag" aria-hidden="true"></i> Tags
+                      </div>
+                      <span
+                        class="badge badge-pill badge-info"
+                        :style="{background:tag.color, color:'#fff'}"
+                        v-for="(tag, key) in todo.tags"
+                        :key="key"
+                      >
+                        <!-- <i class="fa fa-tag" aria-hidden="true"></i> -->
+                        {{tag.name}}
+                      </span>
+                    </div>
+                    <!-- <span class="label todo-tags" v-if="todo.tags">
+                      <span
+                        class="badge badge-pill badge-info"
+                        :style="{background:tag.color, color:'#fff'}"
+                        v-for="(tag, key) in todo.tags"
+                        :key="key"
+                      >
+                        <i class="fa fa-tag" aria-hidden="true"></i>
+                        {{tag.name}}
+                      </span>
+                    </span>-->
                   </div>
 
-                  <span class="date">{{todo.inDate}}</span>
+                  <span class="todo-date">{{todo.inDate}}</span>
                   <div class="actions">
                     <button
                       type="button"
                       class="btn-picto"
-                      @click="completeTodo(key)"
+                      @click.stop="completeTodo(key)"
                       :aria-label="todo.completed ? 'Undone' : 'Done'"
                       :title="todo.completed ? 'Undone' : 'Done'"
                     >
                       <i
                         aria-hidden="true"
                         class="material-icons"
-                        :style="{color:todo.priorityColor}"
                       >{{ todo.completed ? 'check_box' : 'check_box_outline_blank' }}</i>
                     </button>
                     <button
-                      @click="removeTodo(key)"
+                      @click.stop="removeTodo(key)"
                       type="button"
                       aria-label="Delete"
                       title="Delete"
@@ -126,7 +170,7 @@
             </draggable>
           </VuePerfectScrollbar>
         </ul>
-        <div class="todo-footer" v-if="todos.length >0">
+        <div class="todo-footer" v-if="getTodos.length >0">
           <ul>
             <div class="actions">
               <button
@@ -202,6 +246,7 @@ export default {
       }
     };
     this.updateTodos();
+    console.log("getTodos ", this.getTodos);
   },
   computed: {
     ...mapGetters(["getTodos", "getUserData"])
@@ -211,7 +256,9 @@ export default {
     toggleFullScreen() {
       !this.isFullScreen ? this.openFullscreen() : this.closeFullscreen();
     },
-
+    stopTheEvent(event) {
+      event.stopPropagation();
+    },
     openFullscreen() {
       if (this.elem.requestFullscreen) {
         this.elem.requestFullscreen();
@@ -265,11 +312,13 @@ export default {
         duration: 10000
       });
     },
-    showDetail(todoItem) {
+    showDetail(todoItem, e) {
+      e.preventDefault();
+      // e.stopPropagation();
       Bus.$emit("showDetailedTaskModal", todoItem);
     },
     clearTodos() {
-      this.todos = [];
+      this.$store.state.todos = [];
       this.updateTodos();
     },
     updateTodos() {
@@ -293,9 +342,9 @@ export default {
           title: this.newTodoText,
           description: null,
           inDate: moment().format("MMM D"),
-          priority: null,
+          priority: "None",
           tags: [],
-          priorityColor: null
+          priorityColor: "#11cdef"
         };
         this.createNewTodo(newTodo);
         // this.userData.todos.push(newTodo);
@@ -335,7 +384,7 @@ section.main-section {
 #todolist {
   margin: 4rem auto;
   padding: 2rem 3rem 3rem;
-  max-width: 750px;
+  /* max-width: 750px; */
   background: #fff;
   color: #32325d;
   box-shadow: 0 0 19px 10px rgba(100, 100, 100, 0.2);
@@ -378,7 +427,6 @@ section.main-section {
   display: flex;
   margin-top: 5px;
   padding: 0.5rem 1rem;
-  justify-content: space-between;
   align-items: center;
   background-color: rgba(255, 255, 255, 0.1);
   text-align: left;
@@ -387,16 +435,20 @@ section.main-section {
 
 #todolist .actions {
   flex-shrink: 0;
-  padding-left: 0.7em;
 }
 #todolist .label {
   position: relative;
   transition: opacity 0.2s linear;
 }
 #todolist .label.todo-title {
-  display: block;
+  /* display: block; */
+  color: #7a797e;
 }
-#todolist .done .label {
+#todolist .done .label,
+#todolist .done .todo-priority,
+#todolist .done .todo-tags,
+#todolist .done .todo-date,
+#todolist .done .actions {
   opacity: 0.6;
 }
 #todolist .done .label:before {
@@ -585,9 +637,10 @@ form input,
 .todo-info {
   flex: 1 70%;
 }
-.date {
+.todo-date {
   font-size: 12px;
   color: #8898aa;
+  flex: 1 10%;
 }
 .my-style .vue-notification .notification-title {
   color: red !important;
@@ -604,6 +657,9 @@ form input,
 }
 #todolist li.todo-item:hover .handle-wrapper {
   opacity: 1;
+}
+.handle-wrapper:hover {
+  cursor: move;
 }
 .ghost {
   border-bottom: 1px solid #11cdef;
@@ -627,8 +683,9 @@ form input,
 .badge.badge-pill.badge-info {
   font-size: 11px;
   margin-right: 5px;
-  opacity: 0.8;
   text-transform: capitalize;
+  line-height: normal;
+  padding: 3px 10px;
 }
 @media screen and (max-width: 370px) {
   #todolist {
@@ -640,6 +697,85 @@ form input,
   #todolist {
     max-width: 650px;
     padding: 1.25rem;
+  }
+}
+.todo-priority {
+  flex: 1 20%;
+  display: flex;
+  align-items: center;
+}
+.todo-tags {
+  flex: 1 10%;
+  text-align: center;
+}
+.todo-tags .fa-tag[data-toggle="dropdown"] {
+  color: #7a797e;
+  height: 25px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.todo-desc-icon {
+  width: 20px;
+}
+.priority-dot {
+  height: 10px;
+  width: 10px;
+  background: #333;
+  border-radius: 50%;
+  margin-right: 10px;
+}
+.todo-tags .dropdown-menu.show .badge-pill.badge {
+  font-size: 12px;
+  text-transform: capitalize;
+  padding: 8px 8px;
+  display: block;
+  margin: 10px;
+  width: 120px;
+  margin: 8px auto;
+}
+.dropdown-header {
+  color: #7a797e;
+  text-align: center;
+  font-size: 16px;
+  padding: 4px;
+  text-transform: none;
+  font-weight: 600;
+  border-bottom: 1px solid #c5c5c5;
+  margin: 0 20px;
+}
+.no-tags {
+  text-align: center;
+  font-size: 14px;
+  margin: 10px 0;
+}
+@media (max-width: 767px) {
+  #todolist li {
+    flex-wrap: wrap;
+  }
+  .todo-info {
+    flex: 1 70%;
+  }
+  .todo-priority {
+    flex: 1 25%;
+    display: flex;
+    align-items: center;
+    order: 2;
+    flex-shrink: 0;
+    flex-grow: 0;
+  }
+  .todo-tags {
+    flex: 1 10%;
+    text-align: center;
+    order: 3;
+    flex-grow: 0;
+  }
+  .todo-date {
+    flex: 1 10%;
+    align-items: center;
+  }
+  #todolist .actions {
+    flex-shrink: 0;
   }
 }
 </style>

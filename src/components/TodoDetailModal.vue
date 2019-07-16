@@ -381,9 +381,6 @@ export default {
 </script>
 
 <style scoped lang="scss" >
-.content-wrapper {
-  //   height: 200px;
-}
 .task-wrapper {
   display: flex;
   justify-content: center;
