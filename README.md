@@ -8,8 +8,8 @@
 
 ![alt text](https://raw.githubusercontent.com/ayazsayyed/vue-todo/master/dist/assets/img/outer-tags.png)
 
-> Move / Drag the task throught the task list.
-Thanks to #Vue.Draggable
+> Move / Drag the task throught the task list.<br>
+Thanks to [#Vue.Draggable](https://github.com/SortableJS/Vue.Draggable)
 
 ![alt text](https://raw.githubusercontent.com/ayazsayyed/vue-todo/master/dist/assets/img/draggable.png)
 
