@@ -1,8 +1,49 @@
 # vue-todo
 
-> Advanced To-Do List Application built with Vue.js
+## Advanced To-Do List Application built with [#Vue.js](https://github.com/vuejs/vue)
 
 ![alt text](https://raw.githubusercontent.com/ayazsayyed/vue-todo/master/dist/assets/img/dashboard.png)
+
+> Attach Tags to the specific task.
+
+![alt text](https://raw.githubusercontent.com/ayazsayyed/vue-todo/master/dist/assets/img/outer-tags.png)
+
+> Move / Drag the task throught the task list.<br>
+Thanks to [#Vue.Draggable](https://github.com/SortableJS/Vue.Draggable)
+
+![alt text](https://raw.githubusercontent.com/ayazsayyed/vue-todo/master/dist/assets/img/draggable.png)
+
+> You can edit task title, add / eidt description to tasks.
+
+![alt text](https://raw.githubusercontent.com/ayazsayyed/vue-todo/master/dist/assets/img/edit-title-desc.png)
+
+> Set task priority ranging from
+
+* None
+* Low 
+* Medium
+* High
+
+![alt text](https://raw.githubusercontent.com/ayazsayyed/vue-todo/master/dist/assets/img/priority.png)
+
+> Filter & select tags for the tasks from the default tags.
+
+* Home 
+* Personal
+* Work
+
+> You can also set the color to specific tags.
+
+![alt text](https://raw.githubusercontent.com/ayazsayyed/vue-todo/master/dist/assets/img/select-tags.png)
+
+> Or... just create a new tag of your own.
+
+![alt text](https://raw.githubusercontent.com/ayazsayyed/vue-todo/master/dist/assets/img/create-new-tag.png)
+
+
+
+
+
 ## Build Setup
 
 ``` bash
