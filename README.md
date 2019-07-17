@@ -17,6 +17,15 @@ Thanks to [#Vue.Draggable](https://github.com/SortableJS/Vue.Draggable)
 
 ![alt text](https://raw.githubusercontent.com/ayazsayyed/vue-todo/master/dist/assets/img/edit-title-desc.png)
 
+> Set task priority ranging from
+⋅⋅* None
+⋅⋅* Low 
+⋅⋅* Medium
+⋅⋅* High
+
+![alt text](https://raw.githubusercontent.com/ayazsayyed/vue-todo/master/dist/assets/img/priority.png)
+
+
 ## Build Setup
 
 ``` bash
