@@ -13,6 +13,9 @@ Thanks to [#Vue.Draggable](https://github.com/SortableJS/Vue.Draggable)
 
 ![alt text](https://raw.githubusercontent.com/ayazsayyed/vue-todo/master/dist/assets/img/draggable.png)
 
+> You can edit task title, add / eidt description to tasks.
+
+![alt text](https://raw.githubusercontent.com/ayazsayyed/vue-todo/master/dist/assets/img/edit-title-desc.png)
 
 ## Build Setup
 
