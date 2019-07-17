@@ -434,6 +434,9 @@ ul.tags-wrapper {
     cursor: pointer;
   }
   li.tag-item {
+    .custom-control-label{
+      vertical-align: baseline;
+    }
     list-style: none;
     display: flex;
     justify-content: space-between;

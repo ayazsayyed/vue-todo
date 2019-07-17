@@ -313,9 +313,19 @@ export default {
       });
     },
     showDetail(todoItem, e) {
-      e.preventDefault();
-      // e.stopPropagation();
-      Bus.$emit("showDetailedTaskModal", todoItem);
+      console.log(
+        "$(e.target).hasClass('.fa-tag') ",
+        $(e.target).hasClass("fa-tag")
+      );
+
+      if ($(e.target).hasClass("fa-tag")) {
+        console.log("clicked ", e.target);
+        return false;
+      } else {
+        e.preventDefault();
+        // e.stopPropagation();
+        Bus.$emit("showDetailedTaskModal", todoItem);
+      }
     },
     clearTodos() {
       this.$store.state.todos = [];
@@ -710,10 +720,19 @@ form input,
 }
 .todo-tags .fa-tag[data-toggle="dropdown"] {
   color: #7a797e;
-  height: 25px;
+  height: 30px;
   display: flex;
+  width: 30px;
   align-items: center;
   justify-content: center;
+  margin: auto;
+  transition: all 0.2s;
+  border-radius: 50%;
+}
+.todo-tags .fa-tag[data-toggle="dropdown"]:hover {
+  background: rgba(17, 205, 239, 0.5);
+  color: #fff;
+  transform: scale(1.2);
 }
 .todo-desc-icon {
   width: 20px;
