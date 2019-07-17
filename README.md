@@ -4,7 +4,7 @@
 
 ![alt text](https://raw.githubusercontent.com/ayazsayyed/vue-todo/master/dist/assets/img/dashboard.png)
 
-> You can edit task title, add / eidt description to tasks.
+> You can edit task title, add / edit description to the task.
 
 ![alt text](https://raw.githubusercontent.com/ayazsayyed/vue-todo/master/dist/assets/img/edit-title-desc.png)
 
