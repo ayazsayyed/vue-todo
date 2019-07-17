@@ -1,6 +1,6 @@
 # vue-todo
 
-> Advanced To-Do List Application built with [#Vue.js](https://github.com/vuejs/vue)
+## Advanced To-Do List Application built with [#Vue.js](https://github.com/vuejs/vue)
 
 ![alt text](https://raw.githubusercontent.com/ayazsayyed/vue-todo/master/dist/assets/img/dashboard.png)
 
