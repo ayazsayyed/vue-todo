@@ -26,6 +26,23 @@ Thanks to [#Vue.Draggable](https://github.com/SortableJS/Vue.Draggable)
 
 ![alt text](https://raw.githubusercontent.com/ayazsayyed/vue-todo/master/dist/assets/img/priority.png)
 
+> Filter & select tags for the tasks from the default tags.
+
+* Home 
+* Personal
+* Work
+
+> You can also set the color to specific tags.
+
+![alt text](https://raw.githubusercontent.com/ayazsayyed/vue-todo/master/dist/assets/img/select-tags.png)
+
+> Or... just create a new tag of your own.
+
+![alt text](https://raw.githubusercontent.com/ayazsayyed/vue-todo/master/dist/assets/img/create-new-tag.png)
+
+
+
+
 
 ## Build Setup
 
