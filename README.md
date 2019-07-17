@@ -3,6 +3,12 @@
 > Advanced To-Do List Application built with Vue.js
 
 ![alt text](https://raw.githubusercontent.com/ayazsayyed/vue-todo/master/dist/assets/img/dashboard.png)
+
+> Attach Tags to the specific task 
+
+![alt text](https://raw.githubusercontent.com/ayazsayyed/vue-todo/master/dist/assets/img/outer-tags.png)
+
+
 ## Build Setup
 
 ``` bash
