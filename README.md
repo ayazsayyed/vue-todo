@@ -19,10 +19,10 @@ Thanks to [#Vue.Draggable](https://github.com/SortableJS/Vue.Draggable)
 
 > Set task priority ranging from
 
-⋅⋅* None
-⋅⋅* Low 
-⋅⋅* Medium
-⋅⋅* High
+* None
+* Low 
+* Medium
+* High
 
 ![alt text](https://raw.githubusercontent.com/ayazsayyed/vue-todo/master/dist/assets/img/priority.png)
 
