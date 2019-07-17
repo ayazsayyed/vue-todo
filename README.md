@@ -4,9 +4,14 @@
 
 ![alt text](https://raw.githubusercontent.com/ayazsayyed/vue-todo/master/dist/assets/img/dashboard.png)
 
-> Attach Tags to the specific task 
+> Attach Tags to the specific task.
 
 ![alt text](https://raw.githubusercontent.com/ayazsayyed/vue-todo/master/dist/assets/img/outer-tags.png)
+
+> Move / Drag the task throught the task list.
+Thanks to #Vue.Draggable
+
+![alt text](https://raw.githubusercontent.com/ayazsayyed/vue-todo/master/dist/assets/img/draggable.png)
 
 
 ## Build Setup
