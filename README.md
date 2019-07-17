@@ -4,18 +4,21 @@
 
 ![alt text](https://raw.githubusercontent.com/ayazsayyed/vue-todo/master/dist/assets/img/dashboard.png)
 
+> You can edit task title, add / edit description to the task.
+
+![alt text](https://raw.githubusercontent.com/ayazsayyed/vue-todo/master/dist/assets/img/edit-title-desc.png)
+
+
 > Attach Tags to the specific task.
 
 ![alt text](https://raw.githubusercontent.com/ayazsayyed/vue-todo/master/dist/assets/img/outer-tags.png)
+
 
 > Move / Drag the task throught the task list.<br>
 Thanks to [#Vue.Draggable](https://github.com/SortableJS/Vue.Draggable)
 
 ![alt text](https://raw.githubusercontent.com/ayazsayyed/vue-todo/master/dist/assets/img/draggable.png)
 
-> You can edit task title, add / eidt description to tasks.
-
-![alt text](https://raw.githubusercontent.com/ayazsayyed/vue-todo/master/dist/assets/img/edit-title-desc.png)
 
 > Set task priority ranging from
 
