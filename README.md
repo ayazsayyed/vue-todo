@@ -1,6 +1,6 @@
 # vue-todo
 
-> Simple To-Do List Application
+> Advanced To-Do List Application built with Vue.js
 
 ![alt text](https://raw.githubusercontent.com/ayazsayyed/vue-todo/master/dist/assets/img/dashboard.png)
 ## Build Setup
