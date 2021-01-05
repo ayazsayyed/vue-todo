@@ -10,7 +10,7 @@
     "build": "cross-env NODE_ENV=production webpack --progress --hide-modules"
   },
   "dependencies": {
-    "axios": "^0.19.0",
+    "axios": "^0.21.1",
     "firebase": "^6.2.0",
     "moment": "^2.24.0",
     "uuid": "^3.3.2",
