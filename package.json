@@ -1,48 +1,28 @@
 {
-  "name": "vue-todo",
-  "description": "Simple To-Do List Application",
-  "version": "1.0.0",
-  "author": "Ayaz Sayyed",
-  "license": "MIT",
+  "name": "vue-bootstrap-todo",
+  "version": "0.0.0",
   "private": true,
   "scripts": {
-    "dev": "webpack serve --mode development --env development",
-    "build": "cross-env NODE_ENV=production webpack --progress --hide-modules"
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview",
+    "lint": "eslint . --ext .vue,.js,.jsx,.cjs,.mjs --fix --ignore-path .gitignore",
+    "format": "prettier --write src/"
   },
   "dependencies": {
-    "axios": "^0.19.0",
-    "firebase": "^6.2.0",
-    "moment": "^2.24.0",
-    "uuid": "^3.3.2",
-    "vue": "^2.5.11",
-    "vue-click-outside": "^1.0.7",
-    "vue-notification": "^1.3.16",
-    "vue-perfect-scrollbar": "^0.1.0",
-    "vue-router": "^3.0.6",
-    "vuedraggable": "^2.21.0",
-    "vuex": "^3.1.1"
+    "mdb-vue-ui-kit": "^4.0.0",
+    "vue": "^3.3.4",
+    "vue-router": "^4.2.2"
   },
-  "browserslist": [
-    "> 1%",
-    "last 2 versions",
-    "not ie <= 8"
-  ],
   "devDependencies": {
-    "babel-core": "^6.26.0",
-    "babel-loader": "^7.1.2",
-    "babel-plugin-transform-regenerator": "^6.26.0",
-    "babel-polyfill": "^6.26.0",
-    "babel-preset-env": "^1.6.0",
-    "babel-preset-stage-3": "^6.24.1",
-    "cross-env": "^5.0.5",
-    "css-loader": "^0.28.7",
-    "file-loader": "^1.1.4",
-    "node-sass": "^4.5.3",
-    "sass-loader": "^6.0.6",
-    "vue-loader": "^14.2.2",
-    "vue-template-compiler": "^2.4.4",
-    "webpack": "^4.6.0",
-    "webpack-cli": "^4.2.0",
-    "webpack-dev-server": "^3.11.0"
+    "@rushstack/eslint-patch": "^1.2.0",
+    "@vitejs/plugin-vue": "^4.2.3",
+    "@vitejs/plugin-vue-jsx": "^3.0.1",
+    "@vue/eslint-config-prettier": "^7.1.0",
+    "eslint": "^8.39.0",
+    "eslint-plugin-vue": "^9.11.0",
+    "prettier": "^2.8.8",
+    "sass": "^1.63.3",
+    "vite": "^4.3.9"
   }
 }
