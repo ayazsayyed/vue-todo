@@ -5,3 +5,5 @@ ui.start('#firebaseui-auth-container', {
     ],
     // Other config options...
   });
+
+  console.log('abc');
