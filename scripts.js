@@ -6,4 +6,4 @@ ui.start('#firebaseui-auth-container', {
     // Other config options...
   });
 
-  console.log('abce');
+  console.log('abcef');
